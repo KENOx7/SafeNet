@@ -1,0 +1,989 @@
+<!doctype html><html lang="az"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<title>Kiber Qalxan — Fişinq Ovçusu</title>
+<style>
+/* Layout: one centered play column (max 760px). Start, game and end screens swap in place.
+   A chunky cartoon look: thick ink outlines, hard offset shadows, bright flat colors. Single committed theme. */
+:root {
+  --ink: #1c1b4f;
+  --sky: #f2f6fc;
+  --sky-dot: #dbe5f4;
+  --paper: #ffffff;
+  --green: #22b866;
+  --green-deep: #0f7f43;
+  --red: #ff4b5c;
+  --red-deep: #b81f30;
+  --yellow: #ffc72c;
+  --blue: #3b6dff;
+  --muted: #55598a;
+  --soft: #eef5ff;
+  --font-display: "Fredoka", "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Nunito", "Segoe UI", system-ui, -apple-system, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { min-height: 100%; }
+body {
+  margin: 0;
+  background-color: var(--sky);
+  background-image: radial-gradient(var(--sky-dot) 2px, transparent 2px);
+  background-size: 26px 26px;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.5;
+  padding-block: 20px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 760px; margin: 0 auto; position: relative; }
+h1, h2, h3 { font-family: var(--font-display); margin: 0; text-wrap: balance; line-height: 1.12; }
+p { margin: 0; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 4px solid var(--blue); outline-offset: 3px; border-radius: 12px; }
+svg { display: block; }
+
+/* Sound toggle */
+.sound {
+  position: absolute; top: 0; right: 0; z-index: 3;
+  display: flex; align-items: center; gap: 8px;
+  background: var(--paper); border: 3px solid var(--ink); border-radius: 999px;
+  padding: 6px 14px; font-weight: 800; font-size: 14px; box-shadow: 3px 3px 0 var(--ink);
+}
+.sound:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  font-family: var(--font-display); font-weight: 600; font-size: 20px; line-height: 1.2;
+  border: 4px solid var(--ink); border-radius: 18px; padding: 14px 22px;
+  box-shadow: 0 6px 0 var(--ink); transition: transform .08s, box-shadow .08s;
+  text-align: center;
+}
+.btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 0 var(--ink); }
+.btn:active:not(:disabled) { transform: translateY(5px); box-shadow: 0 1px 0 var(--ink); }
+.btn:disabled { opacity: .55; cursor: not-allowed; }
+.btn-safe { background: var(--green); color: #fff; }
+.btn-phish { background: var(--red); color: #fff; }
+.btn-hint { background: var(--yellow); }
+.btn-go { background: var(--blue); color: #fff; font-size: 24px; padding: 16px 34px; }
+.btn svg { width: 26px; height: 26px; flex: none; }
+
+/* Start screen */
+.start { text-align: center; padding-top: 44px; }
+.start .badge { width: 150px; margin: 0 auto 8px; filter: drop-shadow(0 8px 0 rgba(28,27,79,.18)); animation: bob 2.4s ease-in-out infinite; }
+.start h1 { font-size: clamp(34px, 8vw, 54px); }
+.start h1 span { display: block; color: var(--blue); }
+.start .lead { max-width: 520px; margin: 16px auto 0; font-weight: 600; }
+.how {
+  list-style: none; padding: 0; margin: 26px auto 30px; max-width: 560px;
+  display: grid; gap: 12px; text-align: left;
+}
+.how li {
+  display: flex; gap: 14px; align-items: center;
+  background: var(--paper); border: 3px solid var(--ink); border-radius: 16px; padding: 12px 16px;
+  box-shadow: 4px 4px 0 var(--ink); font-weight: 600;
+}
+.how .dot { flex: none; width: 34px; height: 34px; border-radius: 50%; border: 3px solid var(--ink); display: grid; place-items: center; }
+.how .dot svg { width: 18px; height: 18px; }
+.dot-green { background: var(--green); } .dot-red { background: var(--red); } .dot-yellow { background: var(--yellow); }
+
+/* HUD */
+.hud { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding-top: 14px; }
+.me {
+  display: flex; align-items: center; gap: 10px; flex: 1 1 200px; min-width: 0;
+  background: var(--paper); border: 3px solid var(--ink); border-radius: 18px; padding: 6px 14px 6px 8px; box-shadow: 4px 4px 0 var(--ink);
+}
+.me svg { width: 44px; height: 50px; flex: none; }
+.me b { font-family: var(--font-display); font-size: 18px; display: block; line-height: 1.1; }
+.me span { font-size: 13px; color: var(--muted); font-weight: 700; }
+.stat {
+  background: var(--paper); border: 3px solid var(--ink); border-radius: 18px; padding: 6px 16px;
+  box-shadow: 4px 4px 0 var(--ink); display: flex; align-items: center; gap: 10px; min-height: 62px;
+}
+.stat small { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.stat .num { font-family: var(--font-display); font-size: 28px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; }
+.hearts { display: flex; gap: 4px; }
+.heart { width: 30px; height: 30px; color: var(--red); transition: transform .2s; }
+.heart.lost { color: #c9d3e6; }
+.heart.pop { animation: shake .5s; }
+.level { margin-top: 16px; display: flex; align-items: center; gap: 12px; font-family: var(--font-display); font-weight: 600; }
+.level .lvl-text { flex: none; }
+.mail-source { flex: none; font: 600 12px var(--font-body); color: #55458a; }
+.mail-loading { text-align: center; font-weight: 700; padding: 14px 10px; }
+.bar { flex: 1; height: 18px; background: var(--paper); border: 3px solid var(--ink); border-radius: 999px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--yellow); border-right: 3px solid var(--ink); transition: width .4s; }
+
+/* Mail */
+.mail {
+  margin-top: 18px; background: var(--paper); border: 4px solid var(--ink); border-radius: 22px;
+  box-shadow: 8px 8px 0 var(--ink); overflow: hidden; animation: slidein .35s ease-out;
+}
+.mail-bar { background: var(--yellow); border-bottom: 4px solid var(--ink); padding: 8px 14px; display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 600; }
+.mail-bar .d { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--ink); background: var(--paper); }
+.mail-bar .t { margin-left: 6px; }
+.mail-bar .new { margin-left: auto; background: var(--red); color: #fff; border: 2px solid var(--ink); border-radius: 999px; padding: 0 10px; font-size: 13px; }
+.mail-head { display: flex; gap: 14px; align-items: center; padding: 16px 18px 6px; }
+.avatar { flex: none; width: 52px; height: 52px; border-radius: 50%; border: 3px solid var(--ink); background: var(--blue); color: #fff; display: grid; place-items: center; font-family: var(--font-display); font-size: 24px; font-weight: 700; }
+.who { min-width: 0; }
+.who .nm { font-weight: 800; font-size: 18px; overflow-wrap: anywhere; }
+.who .ad { font-weight: 800; font-size: 15px; color: var(--muted); overflow-wrap: anywhere; letter-spacing: .02em; }
+.when { margin-left: auto; font-size: 13px; color: var(--muted); font-weight: 700; flex: none; align-self: flex-start; }
+.subject { font-family: var(--font-display); font-size: clamp(20px, 4.4vw, 26px); font-weight: 600; padding: 8px 18px 4px; overflow-wrap: anywhere; }
+.body { padding: 6px 18px 12px; display: grid; gap: 10px; }
+.linkbox, .attach {
+  display: flex; align-items: center; gap: 10px; margin: 0 18px 14px; padding: 10px 14px;
+  border: 3px dashed var(--ink); border-radius: 14px; background: var(--soft); font-weight: 800; overflow-wrap: anywhere; min-width: 0;
+}
+.linkbox svg, .attach svg { width: 24px; height: 24px; flex: none; }
+.linkbox .u { color: var(--blue); text-decoration: underline; min-width: 0; }
+.attach small { margin-left: auto; color: var(--muted); font-weight: 700; flex: none; }
+.mail-foot { height: 6px; }
+
+/* Gmail-style mail window */
+.gm-top { display: flex; align-items: center; gap: 12px; min-height: 44px; padding-right: 150px; }
+.gm-top .ic { width: 26px; height: 26px; fill: #5f6368; flex: none; }
+.gm-logo { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 600; font-size: 22px; color: #5f6368; }
+.gm-logo svg { width: 32px; height: 32px; }
+.gm-search { flex: 1; max-width: 420px; display: flex; align-items: center; gap: 10px; background: #e9eef6; border-radius: 999px; padding: 9px 16px; color: #5f6368; font-weight: 600; font-size: 15px; }
+.gm-search svg { width: 22px; height: 22px; fill: #5f6368; }
+.mail { margin-top: 14px; background: #fff; border: 1px solid #dadce0; border-radius: 22px; box-shadow: 0 1px 3px rgba(60,64,67,.18), 0 6px 18px rgba(60,64,67,.08); overflow: hidden; animation: slidein .35s ease-out; }
+.gm-tools { display: flex; align-items: center; gap: 4px; padding: 8px 12px; border-bottom: 1px solid #e8eaed; color: #5f6368; }
+.gm-tools svg, .gm-meta svg { width: 22px; height: 22px; fill: #5f6368; flex: none; }
+.gm-tools .ib { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; }
+.gm-tools .sep { width: 1px; height: 22px; background: #dadce0; margin: 0 6px; }
+.gm-tools .pg { margin-left: auto; font-size: 14px; font-weight: 700; padding-right: 6px; }
+.gm-subject { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 18px 20px 4px; }
+.gm-subject h2 { font-family: var(--font-body); font-weight: 600; font-size: clamp(20px, 4.4vw, 24px); color: #1f1f1f; overflow-wrap: anywhere; line-height: 1.25; }
+.gm-chip { background: #e8eaed; color: #444746; font-size: 13px; font-weight: 700; border-radius: 6px; padding: 2px 8px; }
+.gm-meta { display: flex; gap: 14px; align-items: flex-start; padding: 14px 20px 6px; }
+.gm-meta .avatar { width: 46px; height: 46px; border: 0; font-size: 22px; font-family: var(--font-body); font-weight: 700; }
+.gm-meta .who { flex: 1; }
+.gm-meta .nm { font-size: 17px; font-weight: 800; color: #1f1f1f; }
+.gm-meta .ad { font-size: 14px; font-weight: 600; color: #5f6368; letter-spacing: 0; }
+.gm-meta .to { font-size: 14px; color: #5f6368; font-weight: 600; }
+.gm-meta .rt { display: flex; align-items: center; gap: 10px; color: #5f6368; font-size: 13px; font-weight: 700; flex: none; }
+.gm-meta .rt svg { width: 20px; height: 20px; }
+.gm-body { padding: 10px 20px 8px 80px; display: grid; gap: 12px; color: #1f1f1f; font-size: 17px; }
+.gm-link { color: #1a0dab; text-decoration: underline; overflow-wrap: anywhere; }
+.gm-att { margin: 10px 20px 20px 80px; width: 210px; max-width: calc(100% - 100px); border: 1px solid #dadce0; border-radius: 12px; overflow: hidden; }
+.gm-att .th { background: #f1f3f4; height: 70px; display: grid; place-items: center; }
+.gm-att .th svg { width: 38px; height: 38px; }
+.gm-att .nf { padding: 8px 12px; font-size: 14px; font-weight: 700; overflow-wrap: anywhere; border-top: 1px solid #dadce0; }
+.gm-att .nf small { display: block; color: #5f6368; font-weight: 600; }
+.gm-pad { height: 16px; }
+@media (max-width: 540px) {
+  .gm-body { padding-left: 20px; } .gm-att { margin-left: 20px; }
+  .gm-meta .rt .dt { display: none; }
+}
+
+/* Tutorial */
+.tut-coach { display: flex; gap: 12px; align-items: center; margin-top: 10px; }
+.tut-coach svg { width: 64px; height: 72px; flex: none; }
+.bubble { background: #fff; border: 3px solid var(--ink); border-radius: 18px; padding: 10px 14px; font-weight: 700; box-shadow: 4px 4px 0 var(--ink); }
+.tut-prog { margin-top: 12px; display: flex; align-items: center; gap: 12px; font-family: var(--font-display); font-weight: 600; }
+.tut-prog span { flex: none; }
+.hot { font: inherit; color: inherit; background: #fff3b0; border: 2px dashed #d99a00; border-radius: 8px; padding: 0 6px; cursor: pointer; text-align: left; animation: glow 1.4s ease-in-out infinite; }
+.hot.got { background: #c9f5dd; border: 2px solid #188038; animation: none; }
+.tm-bad .hot.got { background: #ffd3d8; border-color: var(--red-deep); }
+@keyframes glow { 0%,100% { box-shadow: 0 0 0 0 rgba(255,199,44,.9); } 50% { box-shadow: 0 0 0 6px rgba(255,199,44,0); } }
+#tTips { margin-top: 16px; }
+.tut-actions { margin-top: 22px; display: grid; gap: 14px; }
+.btn-skip { background: #fff; font-size: 16px; padding: 10px 16px; box-shadow: 0 4px 0 var(--ink); }
+
+.stages { display: flex; gap: 10px; margin-top: 14px; }
+.stg { flex: 1; text-align: center; font-family: var(--font-display); font-weight: 600; border: 3px solid var(--ink); border-radius: 999px; padding: 4px 10px; background: #fff; color: var(--muted); }
+.stg.on { background: var(--yellow); color: var(--ink); box-shadow: 3px 3px 0 var(--ink); }
+.stg.done { background: #c9f5dd; color: var(--ink); }
+.qfb { margin-top: 16px; border: 3px solid var(--ink); border-radius: 16px; padding: 12px 16px; font-weight: 700; box-shadow: 4px 4px 0 var(--ink); }
+.qfb.ok { background: #c9f5dd; } .qfb.no { background: #ffd3d8; }
+
+/* Controls */
+.controls { margin-top: 26px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.hintrow { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+.hintbox {
+  width: 100%; background: #fff7d6; border: 3px solid var(--ink); border-radius: 16px; padding: 12px 16px; font-weight: 600;
+  box-shadow: 4px 4px 0 var(--ink); animation: slidein .25s ease-out;
+}
+.hintbox b { font-family: var(--font-display); }
+
+/* Modal */
+.overlay { position: fixed; inset: 0; z-index: 20; background: rgba(28,27,79,.62); display: grid; place-items: center; padding: 16px; overflow-y: auto; }
+.modal {
+  width: 100%; max-width: 560px; background: var(--paper); border: 4px solid var(--ink); border-radius: 24px; box-shadow: 8px 8px 0 var(--ink);
+  padding: 22px 22px 24px; animation: pop .3s cubic-bezier(.2,1.4,.4,1); margin: auto;
+}
+.modal .top { display: flex; align-items: center; gap: 14px; }
+.modal .ico { flex: none; width: 58px; height: 58px; border-radius: 50%; border: 4px solid var(--ink); display: grid; place-items: center; }
+.modal .ico svg { width: 30px; height: 30px; }
+.modal.ok .ico { background: var(--green); } .modal.bad .ico { background: var(--red); }
+.modal h2 { font-size: clamp(24px, 6vw, 32px); }
+.pill { display: inline-block; margin-top: 4px; font-family: var(--font-display); font-weight: 600; font-size: 17px; border: 3px solid var(--ink); border-radius: 999px; padding: 0 12px; }
+.modal.ok .pill { background: #c9f5dd; } .modal.bad .pill { background: #ffd3d8; }
+.verdict { margin-top: 16px; font-weight: 800; font-size: 18px; }
+.why { margin-top: 8px; font-weight: 600; }
+.clues { margin: 14px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.clues li { background: var(--soft); border: 3px solid var(--ink); border-radius: 12px; padding: 8px 12px; font-weight: 700; font-size: 16px; display: flex; gap: 10px; align-items: flex-start; }
+.clues li svg { width: 20px; height: 20px; flex: none; margin-top: 3px; }
+.clues-title { margin-top: 18px; font-family: var(--font-display); font-weight: 600; font-size: 18px; }
+.modal .btn { margin-top: 22px; width: 100%; }
+
+/* End screen */
+.end { text-align: center; padding-top: 44px; }
+.end .stars { display: flex; justify-content: center; gap: 6px; margin-bottom: 6px; }
+.end .stars svg { width: 46px; height: 46px; color: var(--yellow); filter: drop-shadow(0 4px 0 rgba(28,27,79,.2)); }
+.end .stars svg.off { color: #c9d3e6; }
+.end h1 { font-size: clamp(30px, 7vw, 46px); }
+.rank { display: inline-block; margin-top: 14px; background: var(--yellow); border: 4px solid var(--ink); border-radius: 18px; padding: 6px 20px; font-family: var(--font-display); font-weight: 700; font-size: clamp(22px, 5.5vw, 30px); box-shadow: 5px 5px 0 var(--ink); }
+.final { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-top: 22px; }
+.final .stat { flex-direction: column; align-items: center; gap: 2px; padding: 10px 22px; }
+.msg { max-width: 520px; margin: 18px auto 0; font-weight: 600; }
+.rules { text-align: left; margin: 30px 0 28px; background: var(--paper); border: 4px solid var(--ink); border-radius: 22px; box-shadow: 8px 8px 0 var(--ink); padding: 22px 20px 12px; }
+.rules h2 { font-size: clamp(22px, 5.5vw, 30px); text-align: center; margin-bottom: 14px; }
+.rules ol { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; counter-reset: rule; }
+.rules li { counter-increment: rule; display: flex; gap: 14px; align-items: flex-start; padding-bottom: 12px; border-bottom: 3px dashed var(--sky-dot); font-weight: 600; }
+.rules li:last-child { border-bottom: 0; }
+.rules li::before { content: counter(rule); flex: none; width: 38px; height: 38px; border-radius: 50%; border: 3px solid var(--ink); background: var(--yellow); display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; font-size: 20px; }
+.rules li b { font-family: var(--font-display); font-size: 19px; display: block; margin-bottom: 2px; }
+
+@keyframes bob { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-8px) rotate(2deg); } }
+@keyframes slidein { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes pop { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: none; } }
+@keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-5px) rotate(-8deg); } 40% { transform: translateX(5px) rotate(8deg); } 60% { transform: translateX(-4px); } 80% { transform: translateX(4px); } }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+@media (max-width: 540px) {
+  body { font-size: 16px; }
+  .controls { grid-template-columns: 1fr; }
+  .btn { font-size: 18px; padding: 13px 16px; }
+  .when { display: none; }
+  .hud { padding-top: 12px; }
+  .gm-search { display: none; }
+  .gm-top { padding-right: 140px; }
+  .gm-body p { font-size: 16px; }
+  .stat { flex: 1 1 140px; }
+}
+</style>
+<link rel="stylesheet" href="assets/styles/game.css">
+<link rel="stylesheet" href="assets/styles/oyu.css">
+</head><body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="hero" viewBox="0 0 128 140">
+      <path d="M60 6 L108 24 V66 C108 98 86 122 60 134 C34 122 12 98 12 66 V24 Z" fill="#3b6dff" stroke="#1c1b4f" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M60 20 L96 33 V66 C96 90 80 108 60 118 C40 108 24 90 24 66 V33 Z" fill="#6f96ff"/>
+      <circle cx="46" cy="66" r="8" fill="#fff" stroke="#1c1b4f" stroke-width="3"/>
+      <circle cx="74" cy="66" r="8" fill="#fff" stroke="#1c1b4f" stroke-width="3"/>
+      <circle cx="48" cy="67" r="3.5" fill="#1c1b4f"/>
+      <circle cx="76" cy="67" r="3.5" fill="#1c1b4f"/>
+      <path d="M46 86 Q60 98 74 86" stroke="#1c1b4f" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M32 50 Q60 22 88 50 Z" fill="#ffc72c" stroke="#1c1b4f" stroke-width="4" stroke-linejoin="round"/>
+      <circle cx="96" cy="104" r="15" fill="#ffffff" fill-opacity=".75" stroke="#1c1b4f" stroke-width="5"/>
+      <path d="M107 115 L121 129" stroke="#1c1b4f" stroke-width="8" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="heart" viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.3 3 4.5 6.6 4.5c2 0 3.500 1.100 5.400 3.200 1.900-2.100 3.400-3.200 5.400-3.200 3.600 0 5.700 3.800 4.200 7.200C19.500 16.400 12 21 12 21z" fill="currentColor" stroke="#1c1b4f" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="star" viewBox="0 0 24 24"><path d="M12 2l3 6.500 7 .8-5.200 4.800 1.500 7L12 17.500 5.700 21.100l1.500-7L2 9.300l7-.8z" fill="currentColor" stroke="#1c1b4f" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="check" viewBox="0 0 24 24"><path d="M4 13l5 5L20 6" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="cross" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/></symbol>
+    <symbol id="shield-ok" viewBox="0 0 24 24"><path d="M12 2l8 3v6c0 5-3.500 9-8 11-4.500-2-8-6-8-11V5z" fill="#fff" stroke="#1c1b4f" stroke-width="2" stroke-linejoin="round"/><path d="M8 12l3 3 5-6" fill="none" stroke="#1c1b4f" stroke-width="2.500" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 00-3.500 10.900c.7.600 1 1.300 1 2.100h5c0-.8.300-1.500 1-2.100A6 6 0 0012 3z" fill="#fff" stroke="#1c1b4f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="chain" viewBox="0 0 24 24"><path d="M10 14a4 4 0 005.700 0l3-3a4 4 0 00-5.700-5.700l-1 1M14 10a4 4 0 00-5.700 0l-3 3a4 4 0 005.700 5.700l1-1" fill="none" stroke="#1c1b4f" stroke-width="2.200" stroke-linecap="round"/></symbol>
+    <symbol id="file" viewBox="0 0 24 24"><path d="M6 2h8l5 5v15H6z" fill="#fff" stroke="#1c1b4f" stroke-width="2" stroke-linejoin="round"/><path d="M14 2v5h5" fill="none" stroke="#1c1b4f" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="flag" viewBox="0 0 24 24"><path d="M5 22V3M5 4h13l-3 4.500L18 13H5" fill="#ff4b5c" stroke="#1c1b4f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 14h10l1-14M10 11v6M14 11v6" fill="none" stroke="#fff" stroke-width="2.200" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="inbox-ok" viewBox="0 0 24 24"><path d="M3 12l3-7h12l3 7v7H3z" fill="none" stroke="#fff" stroke-width="2.200" stroke-linejoin="round"/><path d="M3 12h5l1 3h6l1-3h5" fill="none" stroke="#fff" stroke-width="2.200" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+<main class="wrap">
+  <button class="sound" id="soundBtn" type="button" aria-pressed="false" aria-label="Səsi aç və ya bağla">
+    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z" fill="#1c1b4f"/><path id="waves" d="M16 8c2 2 2 6 0 8M19 5c4 4 4 10 0 14" fill="none" stroke="#1c1b4f" stroke-width="2.200" stroke-linecap="round"/></svg>
+    <span id="soundLabel">Səs: açıq</span>
+  </button>
+
+  <!-- START -->
+  <section id="start" class="start">
+    <div class="intro-art"><img src="assets/characters/detective_shield.png" alt="Detektiv Qalxan" /></div>
+    <div class="badge"><svg viewBox="0 0 128 140" aria-hidden="true"><use href="#hero"/></svg></div>
+    <h1>Kiber Qalxan: <span>Fişinq Ovçusu</span></h1>
+    <p class="lead">Salam, detektiv! Gələnlər qutusuna məktublar axır. Bəziləri dostdur, bəziləri isə tələ qurur. Sənin işin onları ayırd etməkdir.</p>
+    <ul class="how">
+      <li><span class="dot dot-yellow"><svg viewBox="0 0 24 24"><use href="#bulb"/></svg></span>Hər məktubu diqqətlə oxu: kim göndərib, nə istəyir?</li>
+      <li><span class="dot dot-green"><svg viewBox="0 0 24 24"><use href="#check"/></svg></span>Məktub təhlükəsiz görünürsə, yaşıl düyməyə bas.</li>
+      <li><span class="dot dot-red"><svg viewBox="0 0 24 24"><use href="#cross"/></svg></span>Tələ görsən, qırmızı düyməyə bas və məktubu blokla.</li>
+      <li><span class="dot dot-red"><svg viewBox="0 0 24 24"><use href="#heart"/></svg></span>Üç canın var. Hər səhv bir canı alır. Doğru cavab 100 xal gətirir.</li>
+    </ul>
+    <button class="btn btn-go" id="startBtn" type="button">Oyuna başla</button>
+  </section>
+
+  <!-- GAME -->
+  <section id="game" hidden>
+    <div class="gm-top">
+      <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+      <div class="gm-logo"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="3" fill="#fff" stroke="#ea4335" stroke-width="2"/><path d="M3 7l9 7 9-7" fill="none" stroke="#ea4335" stroke-width="2" stroke-linejoin="round"/></svg>Qalxan Poçt</div>
+
+    </div>
+    <div class="hud">
+      <div class="me">
+        <svg viewBox="0 0 128 140" aria-hidden="true"><use href="#hero"/></svg>
+        <div><b>Detektiv Qalxan</b><span>Fişinq ovçusu</span></div>
+      </div>
+      <div class="stat"><small>Xal</small><span class="num" id="score">0</span></div>
+      <div class="stat"><small>Can</small><span class="hearts" id="hearts" aria-live="polite"></span></div>
+    </div>
+    <div class="level">
+      <span class="lvl-text" id="lvlText">Mərhələ 1/10</span>
+      <div class="bar" aria-hidden="true"><i id="bar"></i></div>
+      <span class="mail-source" id="mailSource"></span>
+    </div>
+
+    <article class="mail" id="mail" aria-live="polite"></article>
+    <aside class="game-side" aria-label="Detektiv məsləhətləri">
+      <div class="side-mascot"><img src="assets/characters/detective_shield.png" alt="Detektiv Qalxan" /><p>Məktubu diqqətlə oxu! Hər böyük mükafat həqiqi olmaya bilər.</p></div>
+      <div class="side-panel"><h3>Detektivin yoxlama siyahısı</h3><p>Qərar verməzdən əvvəl üç əlaməti araşdır:</p>
+      <ul><li><img src="assets/icons/envelope.png" alt=""/> Göndərənin ünvanı</li><li><img src="assets/icons/phishing.png" alt=""/> Tələskənlik və qorxutma</li><li><img src="assets/icons/safe.png" alt=""/> Şifrə və şəxsi məlumat tələbi</li></ul></div>
+    </aside>
+
+    <div class="controls">
+      <button class="btn btn-safe" id="safeBtn" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#inbox-ok"/></svg>
+        <span>Təhlükəsizdir · Qəbul et</span>
+      </button>
+      <button class="btn btn-phish" id="phishBtn" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#trash"/></svg>
+        <span>Fişinqdir · Blokla</span>
+      </button>
+      <div class="hintrow">
+        <button class="btn btn-hint" id="hintBtn" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#bulb"/></svg>
+          <span>İpucu Al</span>
+        </button>
+        <div class="hintbox" id="hintBox" hidden></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TUTORIAL -->
+  <section id="tutorial" hidden>
+    <div class="gm-top"><div class="gm-logo"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="3" fill="#fff" stroke="#ea4335" stroke-width="2"/><path d="M3 7l9 7 9-7" fill="none" stroke="#ea4335" stroke-width="2" stroke-linejoin="round"/></svg>Qalxan Poçt</div></div>
+    <div class="stages"><span class="stg on" id="stg1">1. Öyrən</span><span class="stg" id="stg2">2. Sına</span></div>
+    <div id="tLesson">
+    <div class="tut-coach">
+      <svg viewBox="0 0 128 140" aria-hidden="true"><use href="#hero"/></svg>
+      <div class="bubble" id="tBubble" aria-live="polite"></div>
+    </div>
+    <div class="tut-prog"><span id="tStep"></span><div class="bar" aria-hidden="true"><i id="tBar"></i></div></div>
+    <article class="mail" id="tMail"></article>
+    <ul class="clues" id="tTips"></ul>
+    <div class="tut-actions">
+      <button class="btn btn-go" id="tNext" type="button" disabled>Növbəti dərs</button>
+      <button class="btn btn-skip" id="tSkip" type="button">Hazırlıqsız keç</button>
+    </div>
+    </div>
+    <div id="tTest" hidden>
+      <div class="tut-coach">
+        <svg viewBox="0 0 128 140" aria-hidden="true"><use href="#hero"/></svg>
+        <div class="bubble" id="qBubble" aria-live="polite"></div>
+      </div>
+      <div class="tut-prog"><span id="qStep"></span><div class="bar" aria-hidden="true"><i id="qBar"></i></div></div>
+      <article class="mail" id="qMail"></article>
+      <div class="controls" id="qBtns">
+        <button class="btn btn-safe" id="qSafe" type="button"><span>Təhlükəsizdir</span></button>
+        <button class="btn btn-phish" id="qPhish" type="button"><span>Fişinqdir</span></button>
+      </div>
+      <div class="qfb" id="qFb" hidden></div>
+      <div class="tut-actions"><button class="btn btn-go" id="qNext" type="button" hidden>Növbəti sual</button></div>
+    </div>
+  </section>
+
+  <!-- END -->
+  <section id="end" class="end" hidden>
+    <div class="stars" id="stars" aria-hidden="true"></div>
+    <h1 id="endTitle"></h1>
+    <div class="rank" id="rank"></div>
+    <div class="final">
+      <div class="stat"><small>Yekun xal</small><span class="num" id="finalScore">0</span></div>
+      <div class="stat"><small>Düzgün cavab</small><span class="num" id="finalCorrect">0</span></div>
+    </div>
+    <p class="msg" id="endMsg"></p>
+    <div class="rules">
+      <h2>Fişinqdən Qorunmanın 4 Qızıl Qaydası</h2>
+      <ol>
+        <li><div><b>Ünvana hərf-hərf bax</b>Saxta ünvanlarda hərflər dəyişdirilir: gma1l, robIox, instagrarn. Ünvan düzgün görünmürsə, inanma.</div></li>
+        <li><div><b>Şifrəni heç kimə yazma</b>Şifrəni, bank kartı nömrəsini və ev ünvanını e-poçtla göndərmə. Rəsmi şirkətlər bunu istəməz.</div></li>
+        <li><div><b>Tələsdirənə inanma</b>"1 saat ərzində!" və "indi bağlanacaq!" kimi sözlər səni qorxutmaq üçündür. Dayan, nəfəs al və düşün.</div></li>
+        <li><div><b>Şübhələnəndə böyüyə göstər</b>Linkə basmadan, göndərəni əvvəlcədən tanıdığın kanaldan yoxla. Əmin deyilsənsə, valideynə və ya müəllimə göstər.</div></li>
+      </ol>
+    </div>
+    <button class="btn btn-go" id="againBtn" type="button">Yenidən Oyna</button>
+  </section>
+</main>
+
+<!-- FEEDBACK MODAL -->
+<div class="overlay" id="overlay" hidden>
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle"></div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- 10 ssenari: 5 təhlükəsiz, 5 fişinq ---------- */
+  var EMAILS = [
+    {
+      phish: true, name: "Robux Hədiyyə Mərkəzi", addr: "destek@robIox-hediyye.example", time: "Bu gün, 15:42",
+      subject: "Təbriklər! 10.000 pulsuz Robux qazandın!",
+      body: ["Salam, oyunçu!", "Sən bu gün seçilmiş 100 nəfərdən birisən və 10.000 Robux qazandın!", "Hədiyyəni almaq üçün aşağıdakı linkə daxil ol, istifadəçi adını və şifrəni yaz. Tələs, təklif yalnız 10 dəqiqə qüvvədədir!"],
+      link: "http://robIox-hediyye.example/pulsuz-robux",
+      hint: "Göndərənin ünvanına yaxından bax. Bütün hərflər yerindədirmi? Üstəlik, hədiyyə almaq üçün şifrə vermək lazımdırmı?",
+      why: "Bu, fişinqdir! Ünvanda robIox yazılıb: kiçik 'l' hərfinin yerinə böyük 'I' qoyulub, ona görə də ilk baxışda düzgün görünür. Həm də səndən şifrə istəyir. Heç bir oyun şirkəti pulsuz hədiyyə üçün şifrəni e-poçtla istəməz!",
+      clues: ["Ünvanda 'l' əvəzinə böyük 'I' var", "Şifrəni yazmağı tələb edir", "'Yalnız 10 dəqiqə!' deyərək səni tələsdirir"]
+    },
+    {
+      phish: false, name: "Aygün müəllimə", addr: "info@mekteb23.example", time: "Bu gün, 14:05",
+      subject: "Sabahkı ekskursiya cədvəli",
+      body: ["Salam, əziz şagirdlər!", "Sabah 6-cı siniflər tarix muzeyinə ekskursiyaya gedir. Avtobus səhər 09:00-da məktəbin qarşısından yola düşəcək.", "Özünüzlə su və yüngül qəlyanaltı götürməyi unutmayın. Hamınızı gözləyirik!"],
+      link: null,
+      hint: "Bu məktub gözlədiyin xəbərdirmi? Ekskursiyanı müəllimindən soruşub təsdiqləyə bilərsənmi?",
+      why: "Bu ssenaridə məktəb ekskursiyanı əvvəlcədən elan edib və məktub sadəcə cədvəli bildirir. Həqiqi məktubda şübhən varsa, müəllimindən özün soruş.",
+      clues: ["Xəbəri tanıdığın məktəb kanalından təsdiqləyə bilərsən", "Şifrə və ya şəxsi məlumat istəmir", "Təhlükəli link və ya fayl yoxdur"]
+    },
+    {
+      phish: false, name: "Kitabxana Dünyası", addr: "salam@kitabxanadunyasi.example", time: "Bu gün, 12:30",
+      subject: "Bu həftənin oxu siyahısı",
+      body: ["Salam!", "Platformamıza qeydiyyatdan keçdiyin üçün sənə hər həftə yeni kitab tövsiyələri göndəririk. Bu həftə: 'Kiçik Şahzadə', 'Nağıllar Aləmi' və 'Kosmosa Səyahət'.", "Xoş mütaliələr! Abunəliyi istədiyin vaxt saytımızdan ləğv edə bilərsən."],
+      link: null,
+      hint: "Sən bu platformaya özün qeydiyyatdan keçmisən? Məktub səndən nə istəyir?",
+      why: "Bu ssenaridə özün abunə olduğun platformadan gözlədiyin kitab siyahısı gəlir. Şübhən varsa, abunəliyini tanıdığın kanaldan yoxla.",
+      clues: ["Platformaya özün qoşulmusan", "Gözlədiyin həftəlik siyahıdır", "Şifrə, link və ya fayl istəmir"]
+    },
+    {
+      phish: true, name: "Gmail Təhlükəsizlik", addr: "admin@gma1l-tehlukesizlik.example", time: "Bu gün, 11:58",
+      subject: "TƏCİLİ! Hesabın 1 saat ərzində silinəcək!",
+      body: ["Hörmətli istifadəçi,", "Hesabında şübhəli fəaliyyət aşkar edildi. Hesabın 1 SAAT ƏRZİNDƏ həmişəlik silinəcək!", "Silinməsin deyə dərhal aşağıdakı linkə klik et və şifrəni təsdiqlə."],
+      link: "http://gma1l-tehlukesizlik.example/tesdiq",
+      hint: "Ünvandakı 'gmail' sözünə diqqətlə bax. Hər hərf yerindədirmi? Mesaj səni niyə bu qədər tələsdirir?",
+      why: "Bu, fişinqdir! Ünvanda 'gmail' əvəzinə 'gma1l' yazılıb: 'i' hərfinin yerinə rəqəm 1 qoyulub. Mesaj səni qorxudub tələsdirir və şifrə istəyir. Rəsmi şirkətlər heç vaxt şifrəni e-poçtla istəməz!",
+      clues: ["'gmail' əvəzinə 'gma1l'", "'1 saat ərzində!' – süni tələskənlik", "Linkə klikləyib şifrə yazmağı tələb edir"]
+    },
+    {
+      phish: false, name: "Nənə", addr: "nene.leyla@ailə.example", time: "Dünən, 20:10",
+      subject: "Axşam zəng edəcəm",
+      body: ["Salam, əzizim! Bu gün necəsən?", "Sabah bayram üçün şirniyyat bişirirəm. Gələndə sənin sevdiyin paxlavanı hazırlayacağam.", "Axşam zəng edərəm, dərslərindən danışarıq. Səni çox öpürəm!"],
+      link: null,
+      hint: "Bu ünvan sənin tanıdığın birinə aiddir? Mesaj səndən pul, şifrə və ya klik tələb edir?",
+      why: "Bu, təhlükəsizdir! Mesajı sənin tanıdığın nənən yazıb və adi söhbətdir. Heç bir şübhəli link, fayl və ya şifrə tələbi yoxdur.",
+      clues: ["Tanıdığın insandan adi söhbət", "Heç nə istəmir", "Tanış biri qəribə bir şey istəsə, ona zəng edib dəqiqləşdir"]
+    },
+    {
+      phish: true, name: "Oyun Dünyası", addr: "yukle@oyun-bonus-yukle.example", time: "Dünən, 17:44",
+      subject: "Yeni oyun: indi pulsuz yüklə!",
+      body: ["Salam, dostum!", "Bu oyun hələ heç kimdə yoxdur və biz onu sənə pulsuz göndəririk. Əlavə faylı aç və oyunu kompüterinə yüklə!", "Faylı açanda çıxan 'İcazə ver' düyməsinə bas."],
+      link: null, attach: { name: "pulsuz_oyun_yukle.exe", size: "8,4 MB" },
+      hint: "Əlavə faylın adının sonuna bax. .exe nə deməkdir? Bu göndərəni tanıyırsan?",
+      why: "Bu, fişinqdir! Tanımadığın göndərən sənə .exe faylı göndərib. Belə fayl kompüterdə proqram işə salır və virus yerləşdirə bilər. Tanımadığın adamdan gələn faylı heç vaxt açma!",
+      clues: ["Göndərəni tanımırsan", ".exe fayl virus yerləşdirə bilər", "'Pulsuz' vədi ilə səni yemləyir"]
+    },
+    {
+      phish: true, name: "Super Mağaza", addr: "mukafat@super-magaza-qazan.example", time: "Dünən, 09:15",
+      subject: "Sən yeni planşet qazandın!",
+      body: ["Təbrik edirik!", "Sən 1.000.000-cu ziyarətçimiz olduğun üçün yeni planşet qazandın.", "Hədiyyəni göndərmək üçün valideynlərinin bank kartının nömrəsini və evinizin ünvanını bizə yaz."],
+      link: "http://super-magaza-qazan.example/hediyye",
+      hint: "Bu mağaza səndən nə istəyir? Hədiyyə almaq üçün kart nömrəsi vermək lazımdırmı?",
+      why: "Bu, fişinqdir! Yalançı mükafat vədi ilə səndən ailənin bank kartı məlumatlarını istəyirlər. Əsl hədiyyə üçün heç vaxt kart nömrəsi tələb olunmaz. Belə mesajı dərhal valideynlərinə göstər.",
+      clues: ["Heç nə etmədən 'mükafat' vəd edir", "Bank kartı və ev ünvanı istəyir", "Təklifin doğruluğunu tanıdığın kanaldan təsdiqləmək olmur"]
+    },
+    {
+      phish: false, name: "Kod Məktəbi", addr: "komek@kodmektebi.example", time: "Cümə, 16:20",
+      subject: "Yeni dərs əlavə olundu: Scratch ilə oyun",
+      body: ["Salam!", "Kod Məktəbində yeni dərs səni gözləyir. Bu dərsdə Scratch proqramında öz oyununu hazırlamağı öyrənəcəksən.", "Dərsi görmək üçün kodmektebi.example saytını özün açıb daxil ola bilərsən."],
+      link: null,
+      hint: "Sən bu məktəbə yazılmısan? Mesaj səndən şifrə istəyir, yoxsa sadəcə xəbər verir?",
+      why: "Bu ssenaridə qeydiyyatdan keçdiyin kurs yeni dərsi xəbər verir. Əmin olmaq üçün kursun əvvəlcədən tanıdığın ünvanından dərsin olub-olmadığını yoxla.",
+      clues: ["Özün qeydiyyatdan keçmisən", "Şifrə istəmir", "Saytın ünvanını özün yazırsan, linkə klikləmirsən"]
+    },
+    {
+      phish: true, name: "Instagram Dəstək", addr: "security@instagrarn-destek.example", time: "Cümə, 10:02",
+      subject: "Hesabın hack olunub! Şifrəni indi dəyiş",
+      body: ["Hörmətli istifadəçi,", "Hesabına icazəsiz giriş olub. Onu xilas etmək üçün aşağıdakı linkə keç, köhnə şifrəni və sonra yeni şifrəni yaz.", "Bunu indi etməsən, hesabın bağlanacaq!"],
+      link: "http://instagrarn-destek.example/sifre-deyis",
+      hint: "Ünvandakı 'instagram' sözünü hərf-hərf oxu. 'm' hərfi həqiqətən 'm'-dirmi?",
+      why: "Bu, fişinqdir! Ünvanda 'instagram' əvəzinə 'instagrarn' yazılıb: 'm' hərfinin yerinə 'r' və 'n' qoyulub, yan-yana 'm'-ə oxşayır. Həm də köhnə şifrəni istəyir və səni qorxudur.",
+      clues: ["'m' əvəzinə 'rn'", "Köhnə və yeni şifrəni yazmağı istəyir", "'Hesabın bağlanacaq!' ilə səni qorxudur"]
+    },
+    {
+      phish: false, name: "Şahmat Klubu", addr: "klub@sahmatklubu.example", time: "Cümə, 08:40",
+      subject: "Cümə axşamı məşqi saat 16:00-da",
+      body: ["Salam, gənc şahmatçı!", "Bu cümə axşamı məşq saat 16:00-da klubun zalında olacaq. Mövzu: açılış prinsipləri.", "Özünlə şahmat dəftərini götür. Görüşənədək!"],
+      link: null,
+      hint: "Sən bu klubun üzvüsən? Mesajda səndən təhlükəli bir iş istənilirmi?",
+      why: "Bu ssenaridə üzv olduğun klub gözlədiyin məşq saatını bildirir. Şübhən varsa, cədvəli klubun əvvəlcədən tanıdığın kanalından təsdiqlə.",
+      clues: ["Üzv olduğun klubdan gəlir", "Link, fayl və şifrə yoxdur", "Sadəcə vaxt və yer bildirir"]
+    }
+  ];
+
+  var TOTAL = EMAILS.length;
+  var POINTS = 100;
+  var MAX_LIVES = 3;
+
+  /* ---------- Səs effektləri (Web Audio API) ---------- */
+  var ac = null;
+  var muted = false;
+  function audio() {
+    if (!ac) {
+      try { ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { ac = null; }
+    }
+    if (ac && ac.state === "suspended") { try { ac.resume(); } catch (e) {} }
+    return ac;
+  }
+  function tone(freq, start, dur, type, vol) {
+    if (muted) return;
+    var c = audio();
+    if (!c) return;
+    var t0 = c.currentTime + start;
+    var o = c.createOscillator();
+    var g = c.createGain();
+    o.type = type || "sine";
+    o.frequency.setValueAtTime(freq, t0);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(vol || 0.15, t0 + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    o.connect(g);
+    g.connect(c.destination);
+    o.start(t0);
+    o.stop(t0 + dur + 0.05);
+  }
+  var sfx = {
+    click: function () { tone(660, 0, 0.08, "triangle", 0.12); },
+    hint: function () { tone(880, 0, 0.1, "sine", 0.13); tone(1175, 0.1, 0.16, "sine", 0.13); },
+    good: function () { [523, 659, 784, 1047].forEach(function (f, i) { tone(f, i * 0.09, 0.2, "triangle", 0.16); }); },
+    bad: function () { tone(220, 0, 0.25, "sawtooth", 0.1); tone(165, 0.15, 0.4, "sawtooth", 0.1); },
+    win: function () { [523, 659, 784, 659, 784, 1047, 1319].forEach(function (f, i) { tone(f, i * 0.11, 0.25, "triangle", 0.16); }); },
+    lose: function () { [392, 330, 262, 196].forEach(function (f, i) { tone(f, i * 0.18, 0.3, "triangle", 0.14); }); }
+  };
+
+  /* ---------- Köməkçilər ---------- */
+  function $(id) { return document.getElementById(id); }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function svgUse(id, cls) {
+    return '<svg' + (cls ? ' class="' + cls + '"' : '') + ' viewBox="0 0 24 24" aria-hidden="true"><use href="#' + id + '"/></svg>';
+  }
+  function show(which) {
+    ["start", "tutorial", "game", "end"].forEach(function (id) { $(id).hidden = id !== which; });
+    window.scrollTo(0, 0);
+  }
+
+  /* ---------- Vəziyyət ---------- */
+  var st = { i: 0, score: 0, lives: MAX_LIVES, correct: 0, locked: false, hinted: false };
+  var loadingMail = false;
+  var runGreetings = null;
+
+  function renderHearts(popIndex) {
+    var html = "";
+    for (var k = 0; k < MAX_LIVES; k++) {
+      var lost = k >= st.lives;
+      html += '<svg class="heart' + (lost ? " lost" : "") + (k === popIndex ? " pop" : "") +
+        '" viewBox="0 0 24 24" role="img" aria-label="' + (lost ? "Boş can" : "Can") + '"><use href="#heart"/></svg>';
+    }
+    $("hearts").innerHTML = html;
+  }
+
+  function renderHud(popIndex) {
+    $("score").textContent = st.score;
+    renderHearts(popIndex);
+    $("lvlText").textContent = "Mərhələ " + (st.i + 1) + "/" + TOTAL;
+    $("bar").style.width = (st.i / TOTAL * 100) + "%";
+  }
+
+  var PATH = {
+    back: "M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z",
+    arch: "M20.54 5.23l-1.39-1.68A1.45 1.45 0 0018 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19a2 2 0 002 2h14a2 2 0 002-2V6.5c0-.48-.17-.93-.46-1.27zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z",
+    spam: "M15.73 3H8.27L3 8.27v7.46L8.27 21h7.46L21 15.73V8.27L15.73 3zM12 17.3c-.72 0-1.3-.58-1.3-1.3 0-.72.58-1.3 1.3-1.3.72 0 1.3.58 1.3 1.3 0 .72-.58 1.3-1.3 1.3zm1-4.3h-2V7h2v6z",
+    del: "M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z",
+    star: "M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z",
+    reply: "M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z",
+    caret: "M7 10l5 5 5-5z"
+  };
+  function gi(k) { return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + PATH[k] + '"/></svg>'; }
+  var AV = ["#1a73e8", "#d93025", "#188038", "#e37400", "#9334e6", "#d01884"];
+  function avColor(n) { var h = 0; for (var k = 0; k < n.length; k++) { h += n.charCodeAt(k); } return AV[h % AV.length]; }
+
+  function renderMail() {
+    var e = EMAILS[st.i];
+    var greeting = runGreetings && runGreetings[st.i];
+    var body = greeting ? [greeting].concat(e.body.slice(1)) : e.body;
+    var html = '<div class="gm-tools"><span class="ib">' + gi("back") + '</span><span class="sep"></span>' +
+      '<span class="ib">' + gi("arch") + '</span><span class="ib">' + gi("spam") + '</span><span class="ib">' + gi("del") + '</span>' +
+      '<span class="pg">' + (st.i + 1) + ' / ' + TOTAL + '</span></div>' +
+      '<div class="gm-subject"><h2>' + esc(e.subject) + '</h2><span class="gm-chip">Gələnlər</span></div>' +
+      '<div class="gm-meta"><div class="avatar" style="background:' + avColor(e.name) + '" aria-hidden="true">' + esc(e.name.charAt(0)) + '</div>' +
+      '<div class="who"><div class="nm">' + esc(e.name) + ' <span class="ad">&lt;' + esc(e.addr) + '&gt;</span></div>' +
+      '<div class="to">mənə ' + gi("caret").replace("<svg", '<svg style="display:inline;width:18px;height:18px;vertical-align:middle"') + '</div></div>' +
+      '<div class="rt"><span class="dt">' + esc(e.time) + '</span>' + gi("star") + gi("reply") + '</div></div>' +
+      '<div class="gm-body">' + body.map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("");
+    if (e.link) { html += '<p class="gm-link">' + esc(e.link) + '</p>'; }
+    html += '</div>';
+    if (e.attach) {
+      html += '<div class="gm-att"><div class="th">' + svgUse("file") + '</div><div class="nf">' + esc(e.attach.name) + '<small>' + esc(e.attach.size) + '</small></div></div>';
+    }
+    html += '<div class="gm-pad"></div>';
+    var m = $("mail");
+    m.innerHTML = html;
+    m.style.animation = "none";
+    void m.offsetWidth;
+    m.style.animation = "";
+  }
+
+  function loadEmail() {
+    st.locked = false;
+    st.hinted = false;
+    renderHud();
+    renderMail();
+    var hb = $("hintBox");
+    hb.hidden = true;
+    hb.innerHTML = "";
+    $("hintBtn").disabled = false;
+    $("safeBtn").disabled = false;
+    $("phishBtn").disabled = false;
+  }
+
+  async function startGame() {
+    if (loadingMail) return;
+    loadingMail = true;
+    runGreetings = null;
+    st = { i: 0, score: 0, lives: MAX_LIVES, correct: 0, locked: true, hinted: false };
+    show("game");
+    renderHud();
+    $("safeBtn").disabled = true;
+    $("phishBtn").disabled = true;
+    $("hintBtn").disabled = true;
+    $("hintBox").hidden = true;
+    $("mailSource").textContent = "";
+    $("mail").innerHTML = '<p class="mail-loading" role="status">Məktublar hazırlanır…</p>';
+    try {
+      var response = await fetch("/api/ai/shield-mail", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: "{}",
+        signal: AbortSignal.timeout(6000)
+      });
+      if (response.ok) {
+        var data = await response.json();
+        if (Array.isArray(data.greetings) && data.greetings.length === TOTAL &&
+            data.greetings.some(function (line) { return typeof line === "string"; }) &&
+            data.greetings.every(function (line) { return line === null || (typeof line === "string" && line.length >= 4 && line.length <= 72); })) {
+          runGreetings = data.greetings;
+        }
+      }
+    } catch {
+      // The authored mailbox is ready when the provider is unreachable.
+    } finally {
+      loadingMail = false;
+      $("mailSource").textContent = runGreetings ? "AI variantı" : "Hazır variant";
+      loadEmail();
+    }
+  }
+
+  /* ---------- Cavab və geri-bildirim ---------- */
+  function answer(sayPhish) {
+    if (st.locked) return;
+    st.locked = true;
+    $("safeBtn").disabled = true;
+    $("phishBtn").disabled = true;
+    $("hintBtn").disabled = true;
+    var e = EMAILS[st.i];
+    var ok = sayPhish === e.phish;
+    var lostIndex = -1;
+    if (ok) {
+      st.score += POINTS;
+      st.correct++;
+      sfx.good();
+    } else {
+      st.lives--;
+      lostIndex = st.lives;
+      sfx.bad();
+    }
+    $("score").textContent = st.score;
+    renderHearts(lostIndex);
+    openModal(e, ok, sayPhish);
+  }
+
+  function isOver() { return st.lives <= 0 || st.i >= TOTAL - 1; }
+
+  function openModal(e, ok, sayPhish) {
+    var title, pill, verdict;
+    if (ok) {
+      title = e.phish ? "Əla! Tələni tutdun!" : "Əla! Düzgün qərar!";
+      pill = "+" + POINTS + " xal";
+      verdict = e.phish ? "Bu məktub saxta idi və sən onu blokladın." : "Bu ssenaridə məktub adi bildirişdir.";
+    } else {
+      title = sayPhish ? "Hoppa! Yanlış həyəcan" : "Diqqət! Tələyə düşdün";
+      pill = "−1 can";
+      verdict = sayPhish ? "Bu ssenaridə məktub adi bildirişdir." : "Bu məktub əslində fişinq idi.";
+    }
+    var over = isOver();
+    var btnLabel = over ? "Nəticəyə bax" : "Növbəti məktub";
+    var clueIcon = e.phish ? "flag" : "shield-ok";
+    var html = '<div class="top"><div class="ico">' + svgUse(ok ? "check" : "cross") + '</div>' +
+      '<div><h2 id="mTitle">' + esc(title) + '</h2><span class="pill">' + esc(pill) + '</span></div></div>' +
+      '<p class="verdict">' + esc(verdict) + '</p>' +
+      '<p class="why">' + esc(e.why) + '</p>' +
+      '<div class="clues-title">' + (e.phish ? "Tələnin əlamətləri:" : "Təhlükəsizlik əlamətləri:") + '</div>' +
+      '<ul class="clues">' + e.clues.map(function (c) { return "<li>" + svgUse(clueIcon) + "<span>" + esc(c) + "</span></li>"; }).join("") + '</ul>' +
+      '<div class="live-coach"><button id="liveCoachBtn" type="button">Grok-dan məsləhət al</button><p id="liveCoachTip" role="status" hidden></p></div>' +
+      '<button class="btn ' + (ok ? "btn-safe" : "btn-phish") + '" id="nextBtn" type="button">' + esc(btnLabel) + '</button>';
+    var modal = $("modal");
+    modal.className = "modal " + (ok ? "ok" : "bad");
+    modal.innerHTML = html;
+    $("overlay").hidden = false;
+    document.querySelector(".wrap").inert = true;
+    var coachController = new AbortController();
+    $("liveCoachBtn").addEventListener("click", function () {
+      requestCoach(st.i, ok, e.hint, coachController.signal);
+    }, { once: true });
+    $("nextBtn").addEventListener("click", function () {
+      sfx.click();
+      coachController.abort();
+      $("overlay").hidden = true;
+      document.querySelector(".wrap").inert = false;
+      if (over) {
+        endGame();
+      } else {
+        st.i++;
+        loadEmail();
+        $("safeBtn").focus({ preventScroll: true });
+      }
+    });
+    $("nextBtn").focus({ preventScroll: true });
+  }
+
+  async function requestCoach(round, correct, fallback, signal) {
+    var button = $("liveCoachBtn");
+    var message = $("liveCoachTip");
+    button.disabled = true;
+    message.hidden = false;
+    message.textContent = "Məsləhət hazırlanır…";
+    try {
+      var response = await fetch("/api/ai/shield", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        signal: AbortSignal.any([signal, AbortSignal.timeout(9000)]),
+        body: JSON.stringify({ round: round, correct: correct })
+      });
+      if (!response.ok) throw new Error("Coach unavailable");
+      var result = await response.json();
+      if (typeof result.tip !== "string" || !result.tip.trim()) throw new Error("Missing tip");
+      if (!signal.aborted) message.textContent = "Grok: " + result.tip;
+    } catch (_) {
+      if (!signal.aborted) message.textContent = "Oyundakı ipucu: " + fallback;
+    }
+  }
+
+  /* ---------- Bitiş ---------- */
+  function getRank(score) {
+    if (score >= 900) return { title: "Baş Kiber Detektiv", stars: 4, msg: "Möhtəşəm! Heç bir fişinq səndən yayına bilmir. Dostlarına və ailənə də öyrət!" };
+    if (score >= 600) return { title: "Kiber Qəhrəman", stars: 3, msg: "Çox yaxşı! Tələlərin çoxunu tutdun. Bir az daha məşq etsən, baş detektiv olacaqsan." };
+    if (score >= 300) return { title: "Təhlükəsizlik Tələbəsi", stars: 2, msg: "Yaxşı başlanğıc! Qızıl qaydaları oxu və yenidən cəhd et." };
+    return { title: "Gənc Kəşfiyyatçı", stars: 1, msg: "Yeni başlayanlar belə öyrənir. Qaydaları diqqətlə oxu və yenidən sına!" };
+  }
+
+  function endGame() {
+    var r = getRank(st.score);
+    var answered = st.i + 1;
+    var dead = st.lives <= 0;
+    $("endTitle").textContent = dead ? "Canların bitdi!" : "Bütün məktublar yoxlandı!";
+    $("rank").textContent = r.title;
+    $("finalScore").textContent = st.score;
+    $("finalCorrect").textContent = st.correct + " / " + answered;
+    $("endMsg").textContent = r.msg;
+    var stars = "";
+    for (var k = 1; k <= 4; k++) {
+      stars += '<svg class="' + (k <= r.stars ? "" : "off") + '" viewBox="0 0 24 24"><use href="#star"/></svg>';
+    }
+    $("stars").innerHTML = stars;
+    show("end");
+    if (r.stars >= 3) { sfx.win(); } else { sfx.lose(); }
+  }
+
+  /* ---------- İpucu ---------- */
+  function giveHint() {
+    if (st.locked || st.hinted) return;
+    st.hinted = true;
+    sfx.hint();
+    var hb = $("hintBox");
+    hb.innerHTML = "<b>İpucu:</b> " + esc(EMAILS[st.i].hint);
+    hb.hidden = false;
+    $("hintBtn").disabled = true;
+  }
+
+  /* ---------- Təlim ---------- */
+  var LESSONS = [
+    { phish: true, name: "Robux Hədiyyə", addr: "[[a|destek@robIox-hediyye.example]]", time: "İndi",
+      subject: "Pulsuz Robux! [[t|Cəmi 5 dəqiqə qalıb!]]",
+      body: ["Salam, oyunçu! Sən 10.000 Robux qazandın!", "Hədiyyəni almaq üçün [[p|istifadəçi adını və şifrəni yaz]] və linkə bas."],
+      link: "[[l|http://robIox-hediyye.example/hediyye]]",
+      intro: "Bu məktub tələdir! Sarı yerlərə toxun və əlamətləri tap.",
+      tips: {
+        a: "Ünvanı hərf-hərf oxu: 'robIox'-da kiçik 'l' yerinə böyük 'I' var. Saxta ünvandır!",
+        t: "Tələsdirmək fişinqçinin hiyləsidir. Dayan, nəfəs al və düşün!",
+        p: "Heç kim şifrəni e-poçtla istəməz. Şifrə yalnız səndə qalır!",
+        l: "Tanımadığın linkə klikləmə. Böyüyə göstər!" } },
+    { phish: false, name: "Aygün müəllimə", addr: "[[a|info@mekteb23.example]]", time: "Bu gün",
+      subject: "Sabahkı dərs saat 9-da başlayır",
+      body: ["Salam, əziz şagirdlər!", "Sabah [[n|su və dəftərini götürməyi]] unutmayın.", "[[c|Bu məktubda link, fayl və ya şifrə tələbi yoxdur.]]"],
+      link: null,
+      intro: "İndi təhlükəsiz məktuba bax. Yaxşı əlamətləri tap!",
+      tips: {
+        a: "Müəllimi tanıyırsan. Göndərənin adı və domenin sonluğu təkbaşına kifayət etmir. Şübhələnəndə müəllimindən soruş.",
+        n: "Sadə xəbərdir. Heç kim səni tələsdirmir və qorxutmur.",
+        c: "Bu məktub məlumat istəyən bir tapşırıq vermir. Linkin olmaması təkbaşına təhlükəsizlik sübutu deyil." } }
+  ];
+  var tl = { i: 0, found: 0 };
+  function mk(str) { return esc(str).replace(/\[\[(\w)\|(.+?)\]\]/g, '<button type="button" class="hot" data-k="$1">$2</button>'); }
+
+  function renderLesson() {
+    var L = LESSONS[tl.i];
+    tl.found = 0;
+    var total = Object.keys(L.tips).length;
+    var html = '<div class="gm-subject"><h2>' + mk(L.subject) + '</h2><span class="gm-chip">Gələnlər</span></div>' +
+      '<div class="gm-meta"><div class="avatar" style="background:' + avColor(L.name) + '" aria-hidden="true">' + esc(L.name.charAt(0)) + '</div>' +
+      '<div class="who"><div class="nm">' + esc(L.name) + ' <span class="ad">&lt;' + mk(L.addr) + '&gt;</span></div><div class="to">mənə</div></div>' +
+      '<div class="rt"><span class="dt">' + esc(L.time) + '</span></div></div>' +
+      '<div class="gm-body">' + L.body.map(function (p) { return "<p>" + mk(p) + "</p>"; }).join("") +
+      (L.link ? '<p class="gm-link">' + mk(L.link) + '</p>' : '') + '</div><div class="gm-pad"></div>';
+    var m = $("tMail");
+    m.className = "mail " + (L.phish ? "tm-bad" : "tm-ok");
+    m.innerHTML = html;
+    $("tTips").innerHTML = "";
+    $("tBubble").textContent = L.intro;
+    $("tStep").textContent = "Dərs " + (tl.i + 1) + "/" + LESSONS.length + " · 0/" + total;
+    $("tBar").style.width = "0%";
+    $("tNext").disabled = true;
+    $("tNext").textContent = tl.i < LESSONS.length - 1 ? "Növbəti dərs" : "Sınağa keç";
+  }
+
+  function openTutorial() {
+    tl.i = 0; show("tutorial");
+    $("tLesson").hidden = false; $("tTest").hidden = true;
+    $("stg1").className = "stg on"; $("stg2").className = "stg";
+    renderLesson();
+  }
+
+  $("tMail").addEventListener("click", function (ev) {
+    var b = ev.target.closest(".hot");
+    if (!b || b.classList.contains("got")) return;
+    var L = LESSONS[tl.i];
+    var total = Object.keys(L.tips).length;
+    b.classList.add("got");
+    tl.found++;
+    sfx.hint();
+    var tip = L.tips[b.getAttribute("data-k")];
+    $("tBubble").textContent = tip;
+    $("tTips").insertAdjacentHTML("afterbegin", "<li>" + svgUse(L.phish ? "flag" : "shield-ok") + "<span>" + esc(tip) + "</span></li>");
+    $("tStep").textContent = "Dərs " + (tl.i + 1) + "/" + LESSONS.length + " · " + tl.found + "/" + total;
+    $("tBar").style.width = (tl.found / total * 100) + "%";
+    if (tl.found === total) {
+      $("tNext").disabled = false;
+      $("tBubble").textContent = "Əla! Bütün əlamətləri tapdın! " + (L.phish ? "Belə məktubu görəndə qırmızı düyməyə bas." : "Belə məktub təhlükəsizdir.");
+      sfx.good();
+    }
+  });
+  $("tNext").addEventListener("click", function () {
+    sfx.click();
+    if (tl.i < LESSONS.length - 1) { tl.i++; renderLesson(); window.scrollTo(0, 0); } else { startTest(); }
+  });
+  $("tSkip").addEventListener("click", function () { sfx.click(); startGame(); });
+
+  /* ---------- Sınaq (2-ci mərhələ) ---------- */
+  var QUIZ = [
+    { phish: true, name: "Netflix Dəstək", addr: "hesab@netf1ix-destek.example", time: "İndi",
+      subject: "Hesabın bağlanır! Kartını yaz",
+      body: ["Hörmətli istifadəçi, ödənişdə problem var.", "Hesabın bağlanmasın deyə valideynlərinin bank kartı nömrəsini bu gün cavab yaz."], link: null,
+      why: "Ünvanda 'netflix' əvəzinə 'netf1ix' var, səni qorxudur və kart nömrəsi istəyir. Bu, fişinqdir." },
+    { phish: false, name: "Riyaziyyat Klubu", addr: "klub@riyaziyyat.example", time: "Bu gün",
+      subject: "Cümə günü olimpiada məşqi",
+      body: ["Salam! Cümə günü saat 15:00-da klubda olimpiada məşqi olacaq.", "Qələm və dəftərini götürməyi unutma."], link: null,
+      why: "Bu, üzv olduğun klubun gözlənilən məşq xəbəridir. Əmin olmaq üçün xəbəri klubun tanıdığın kanalından yoxla." },
+    { phish: true, name: "Pulsuz Skinlər", addr: "skin@bonus-skin.example", time: "Dünən",
+      subject: "Nadir skin səni gözləyir!",
+      body: ["Təbriklər! Nadir skin qazandın.", "Almaq üçün linkə keç və oyun şifrəni yaz."], link: "http://bonus-skin.example/al",
+      why: "Tanımadığın göndərən hədiyyə vəd edir və hesab şifrəsini istəyir. Bu, fişinqdir." }
+  ];
+  var qs = { i: 0, ok: 0, fin: false };
+
+  function renderQ() {
+    var q = QUIZ[qs.i];
+    $("qMail").innerHTML = '<div class="gm-subject"><h2>' + esc(q.subject) + '</h2><span class="gm-chip">Gələnlər</span></div>' +
+      '<div class="gm-meta"><div class="avatar" style="background:' + avColor(q.name) + '" aria-hidden="true">' + esc(q.name.charAt(0)) + '</div>' +
+      '<div class="who"><div class="nm">' + esc(q.name) + ' <span class="ad">&lt;' + esc(q.addr) + '&gt;</span></div><div class="to">mənə</div></div>' +
+      '<div class="rt"><span class="dt">' + esc(q.time) + '</span></div></div>' +
+      '<div class="gm-body">' + q.body.map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("") +
+      (q.link ? '<p class="gm-link">' + esc(q.link) + '</p>' : '') + '</div><div class="gm-pad"></div>';
+    $("qStep").textContent = "Sual " + (qs.i + 1) + "/" + QUIZ.length;
+    $("qBar").style.width = (qs.i / QUIZ.length * 100) + "%";
+    $("qSafe").disabled = false; $("qPhish").disabled = false;
+    $("qFb").hidden = true; $("qNext").hidden = true;
+  }
+
+  function startTest() {
+    qs = { i: 0, ok: 0, fin: false };
+    $("tLesson").hidden = true; $("tTest").hidden = false; $("qBtns").hidden = false;
+    $("stg1").className = "stg done"; $("stg2").className = "stg on";
+    $("qBubble").textContent = "Sınaq vaxtı! Bu dəfə özün qərar ver. Can itirmirsən.";
+    renderQ();
+    window.scrollTo(0, 0);
+  }
+
+  function answerQ(sayPhish) {
+    var q = QUIZ[qs.i];
+    var ok = sayPhish === q.phish;
+    if (ok) { qs.ok++; sfx.good(); } else { sfx.bad(); }
+    $("qSafe").disabled = true; $("qPhish").disabled = true;
+    var fb = $("qFb");
+    fb.className = "qfb " + (ok ? "ok" : "no");
+    fb.textContent = (ok ? "Düzdür! " : "Düz deyil. ") + q.why;
+    fb.hidden = false;
+    $("qBar").style.width = ((qs.i + 1) / QUIZ.length * 100) + "%";
+    $("qNext").textContent = qs.i < QUIZ.length - 1 ? "Növbəti sual" : "Nəticəyə bax";
+    $("qNext").hidden = false;
+    $("qNext").focus({ preventScroll: true });
+  }
+
+  $("qSafe").addEventListener("click", function () { sfx.click(); answerQ(false); });
+  $("qPhish").addEventListener("click", function () { sfx.click(); answerQ(true); });
+  $("qNext").addEventListener("click", function () {
+    sfx.click();
+    if (qs.fin) { startGame(); return; }
+    if (qs.i < QUIZ.length - 1) { qs.i++; renderQ(); return; }
+    qs.fin = true;
+    $("stg2").className = "stg done";
+    $("qBtns").hidden = true;
+    var great = qs.ok === QUIZ.length;
+    $("qBubble").textContent = great ? "Əla! Hamısını düzgün tapdın!" : "Yaxşı! " + qs.ok + "/" + QUIZ.length + " düz. Oyunda daha da yaxşı olacaqsan!";
+    $("qFb").className = "qfb ok";
+    $("qFb").textContent = "Sınaq bitdi: " + qs.ok + "/" + QUIZ.length + " düzgün cavab. İndi əsl oyun başlayır, 10 məktub səni gözləyir!";
+    $("qNext").textContent = "Əsl oyuna başla";
+    sfx.win();
+  });
+
+  /* ---------- Düymələr ---------- */
+  $("startBtn").addEventListener("click", function () { audio(); sfx.click(); openTutorial(); });
+  $("againBtn").addEventListener("click", function () { sfx.click(); startGame(); });
+  $("safeBtn").addEventListener("click", function () { audio(); sfx.click(); answer(false); });
+  $("phishBtn").addEventListener("click", function () { audio(); sfx.click(); answer(true); });
+  $("hintBtn").addEventListener("click", function () { audio(); giveHint(); });
+  $("soundBtn").addEventListener("click", function () {
+    muted = !muted;
+    $("soundBtn").setAttribute("aria-pressed", muted ? "true" : "false");
+    $("soundLabel").textContent = muted ? "Səs: bağlı" : "Səs: açıq";
+    $("waves").style.display = muted ? "none" : "";
+    if (!muted) { audio(); sfx.click(); }
+  });
+})();
+</script>
+
+</body></html>

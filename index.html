@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="az">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a111a" />
+    <meta name="description" content="SafeNet masaüstündə şəbəkə müdafiəsi, onlayn təhlükəsizlik və şəkil araşdırması oyunlarını aç." />
+    <link rel="icon" type="image/svg+xml" href="/safenet.svg" />
+    <title>SafeNet</title>
+    <style>
+      body { margin: 0; background: #09111b; }
+      #safenet-boot {
+        box-sizing: border-box; position: fixed; inset: 0; z-index: 100; display: grid; place-items: center;
+        padding: 24px; color: #ecf8ff; background: radial-gradient(ellipse at 50% 42%, #172b3c, #09111b 64%);
+        text-align: center; font-family: system-ui, sans-serif;
+      }
+      .safenet-boot-panel { display: grid; justify-items: center; gap: 22px; }
+      .safenet-boot-panel img { width: 76px; height: 76px; }
+      .safenet-boot-panel p { margin: 0; }
+      .safenet-boot-title, .safenet-boot-welcome { font-size: clamp(25px, 5vw, 46px); font-weight: 740; }
+      .safenet-boot-progress { display: grid; justify-items: center; gap: 12px; margin-top: 14px; }
+      .safenet-boot-progress p { color: #a2bfd0; font: 13px ui-monospace, Consolas, monospace; }
+      .safenet-boot-track { width: min(190px, 54vw); height: 4px; overflow: hidden; border-radius: 4px; background: #32495c; }
+      .safenet-boot-track::after {
+        content: ""; display: block; width: 38%; height: 100%; border-radius: inherit; background: #80dfbb;
+        animation: safenet-loading 850ms ease-in-out infinite alternate;
+      }
+      #safenet-boot[data-phase="welcome"] { animation: safenet-desktop-reveal 240ms 880ms both; }
+      #safenet-boot[data-phase="welcome"] .safenet-boot-welcome { display: block; animation: safenet-welcome 250ms both; }
+      #safenet-boot[data-phase="welcome"] :is(.safenet-boot-title, .safenet-boot-progress) { display: none; }
+      .safenet-boot-welcome { display: none; }
+      @keyframes safenet-loading { from { transform: translateX(-45%); } to { transform: translateX(205%); } }
+      @keyframes safenet-welcome { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes safenet-desktop-reveal { from { opacity: 1; } to { opacity: 0; } }
+      @media (prefers-reduced-motion: reduce) {
+        #safenet-boot[data-phase="welcome"], #safenet-boot[data-phase="welcome"] .safenet-boot-welcome,
+        .safenet-boot-track::after { animation: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="safenet-boot" role="status">
+      <div class="safenet-boot-panel">
+        <img src="/safenet.svg" width="76" height="76" alt="" />
+        <p class="safenet-boot-title">SafeNet</p>
+        <div class="safenet-boot-progress">
+          <div class="safenet-boot-track" aria-hidden="true"></div>
+          <p>Masaüstü yüklənir…</p>
+        </div>
+        <p class="safenet-boot-welcome">SafeNet-ə xoş gəlmisiniz</p>
+      </div>
+    </div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

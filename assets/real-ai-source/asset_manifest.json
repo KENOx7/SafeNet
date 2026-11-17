@@ -1,0 +1,56 @@
+{
+  "project": "Real yoxsa AI? — Kiber Tülkü",
+  "prototype": "index.html",
+  "original": "source/original_texnologiya.html",
+  "assets": {
+    "cat": [
+      "assets/cases/cat_normal.png",
+      "assets/cases/cat_ai.png",
+      "assets/cases/cat_normal.svg",
+      "assets/cases/cat_ai.svg"
+    ],
+    "kid": [
+      "assets/cases/kid_normal.png",
+      "assets/cases/kid_ai.png",
+      "assets/cases/kid_normal.svg",
+      "assets/cases/kid_ai.svg"
+    ],
+    "landscape": [
+      "assets/cases/landscape_normal.png",
+      "assets/cases/landscape_ai.png",
+      "assets/cases/landscape_normal.svg",
+      "assets/cases/landscape_ai.svg"
+    ],
+    "house": [
+      "assets/cases/house_normal.png",
+      "assets/cases/house_ai.png",
+      "assets/cases/house_normal.svg",
+      "assets/cases/house_ai.svg"
+    ],
+    "dog": [
+      "assets/cases/dog_normal.png",
+      "assets/cases/dog_ai.png",
+      "assets/cases/dog_normal.svg",
+      "assets/cases/dog_ai.svg"
+    ],
+    "cake": [
+      "assets/cases/cake_normal.png",
+      "assets/cases/cake_ai.png",
+      "assets/cases/cake_normal.svg",
+      "assets/cases/cake_ai.svg"
+    ]
+  },
+  "mascot": [
+    "assets/ui/fox_3d_scene.png",
+    "assets/ui/fox_detective_transparent.svg",
+    "assets/ui/fox_detective_transparent.png"
+  ],
+  "screenshots": [
+    "reference/desktop_intro.png",
+    "reference/desktop_game.png",
+    "reference/desktop_result.png",
+    "reference/mobile_game.png"
+  ],
+  "code_prompt": "CODEX_PROMPT.md",
+  "license_note": "This is a training illustration kit, not verified real-vs-generated photo provenance."
+}

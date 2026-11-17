@@ -1,0 +1,37 @@
+{
+  "project": "Real yoxsa AI? — photoreal assets update",
+  "image_source_note": "All photos are AI-generated/synthetic visual training examples; NORMAL means visually coherent, not camera-verified real. Do not claim REAL as genuine photographic provenance.",
+  "sizes": "square PNG 1024x1024",
+  "cases": {
+    "cat": {
+      "normal": "assets/cases/cat_normal.png",
+      "ai": "assets/cases/cat_ai.png"
+    },
+    "kid": {
+      "normal": "assets/cases/kid_normal.png",
+      "ai": "assets/cases/kid_ai.png",
+      "explanation": "Two legs in BOTH versions; AI has additional hand and damaged/melting ball."
+    },
+    "landscape": {
+      "normal": "assets/cases/landscape_normal.png",
+      "ai": "assets/cases/landscape_ai.png"
+    },
+    "house": {
+      "normal": "assets/cases/house_normal.png",
+      "ai": "assets/cases/house_ai.png"
+    },
+    "dog": {
+      "normal": "assets/cases/dog_normal.png",
+      "ai": "assets/cases/dog_ai.png"
+    },
+    "cake": {
+      "normal": "assets/cases/cake_normal.png",
+      "ai": "assets/cases/cake_ai.png",
+      "explanation": "AI version has a fantasy eye and glowing portal decoration."
+    }
+  },
+  "revisions": {
+    "kid_ai": "3 hands, exactly 2 legs, melted football",
+    "cake_ai": "clearly fantastical cake detail: eye and glowing door"
+  }
+}

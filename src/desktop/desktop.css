@@ -1,0 +1,53 @@
+.pc-shell { height:100dvh; width:100%; overflow:hidden; display:grid; grid-template-rows:36px minmax(0,1fr) 38px; background:#211d30; color:#eee8f4; }
+.pc-bar,.pc-taskbar { display:flex; align-items:center; gap:10px; padding:0 12px; background:#171d27; font-size:12px; z-index:10; }
+.pc-bar { border-bottom:1px solid #354151; }
+.pc-bar button { display:flex; align-items:center; gap:7px; padding:5px; }
+.pc-home { color:#dcc8ed; }
+.pc-home:hover { color:#fff0cd; }
+.pc-active { color:#b9b0c4; }
+.pc-bar time { margin-left:auto; font-family:var(--mono); }
+.pc-app-menu { position:relative; border-left:1px solid #354151; padding-left:5px; }
+.pc-app-menu summary { display:flex; align-items:center; gap:5px; padding:5px 6px; border-radius:4px; cursor:pointer; list-style:none; }
+.pc-app-menu summary::-webkit-details-marker { display:none; }
+.pc-app-menu summary:hover,.pc-app-menu[open] summary { background:#28364a; }
+.pc-app-list { position:absolute; inset:calc(100% + 6px) auto auto 0; min-width:190px; padding:5px; border:1px solid #43556e; border-radius:5px; background:#171d27; box-shadow:0 8px 20px #0008; }
+.pc-app-list button { width:100%; min-height:34px; border-radius:3px; text-align:left; }
+.pc-app-list button:hover,.pc-app-list button:focus-visible { background:#293951; }
+.pc-area { position:relative; min-height:0; overflow:hidden; }
+.pc-desktop,.pc-program { position:absolute; inset:0; overflow:hidden; }
+.pc-hidden { visibility:hidden; pointer-events:none; }
+.pc-program > .app,.pc-program > .network-game { height:100%; }
+.pc-program > .app:fullscreen,.pc-program > .network-game:fullscreen { height:100%; }
+.pc-desktop { background:#0b141e url('/desktop-wallpaper.png') center / cover no-repeat; }
+.pc-icons { position:relative; z-index:1; display:grid; gap:10px; width:142px; padding:22px 10px; }
+.pc-icons button { display:grid; justify-items:center; gap:7px; padding:9px 4px; border:1px solid transparent; border-radius:6px; text-align:center; text-shadow:0 1px 3px #000,0 2px 6px #000; }
+.pc-icons button:hover,.pc-icons button:focus-visible { background:#92bcf026; border-color:#91b7e155; }
+.pc-icons strong { font-size:13px; }
+.pc-app-icon { display:block; width:68px; height:68px; object-fit:cover; border-radius:23%; flex:none; box-shadow:0 3px 8px #0006; }
+.pc-app-list .pc-app-icon,.pc-taskbar .pc-app-icon { width:20px; height:20px; box-shadow:none; }
+.pc-game-frame { display:block; width:100%; height:100%; border:0; }
+@media (max-height: 820px) {
+  .pc-icons { padding-block:14px; gap:8px; }
+  .pc-icons button { padding-block:8px; }
+}
+@media (max-height: 740px) {
+  .pc-icons { width:min(100%,284px); grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+.pc-taskbar { border-top:1px solid #354151; overflow:auto; gap:6px; }
+.pc-taskbar button { display:flex; align-items:center; gap:7px; min-height:28px; padding:3px 9px; white-space:nowrap; background:#233044; border:1px solid #35465c; border-radius:4px; font-size:12px; }
+.pc-taskbar button.selected { background:#304767; border-color:#7094bf; }
+.pc-loading { display:grid; height:100%; place-items:center; }
+.pc-notice { position:absolute; right:12px; top:12px; background:#362c42; border:1px solid #bda389; padding:12px; display:flex; gap:12px; z-index:20; font-size:13px; }
+@media(max-width:600px) { .pc-bar { gap:5px; padding:0 6px; } .pc-active { display:none; } .pc-taskbar { padding:0 6px; } }
+@media (max-height: 650px) and (min-width: 891px) {
+  .pc-program .network-game { grid-template-rows: 54px minmax(0, 1fr) 138px; gap: 6px; }
+  .pc-program .net-desk { grid-template-rows: minmax(0, 1fr) 17px; }
+  .pc-program .net-inspector { gap: 4px; padding-block: 3px; }
+  .pc-program .net-inspector p, .pc-program .net-inspector li { font-size: 12px; line-height: 1.24; }
+  .pc-program .net-advice { display: none; }
+  .pc-program .net-inspector h2 { font-size: 13px; padding-bottom: 3px; }
+  .pc-program .net-node-state { font-size: 11px; min-height: 22px; }
+  .pc-program .net-slotted { gap: 2px; padding: 3px 5px; }
+  .pc-program .net-small-key { font-size: 11px; }
+}
+

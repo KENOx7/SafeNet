@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="720" viewBox="0 0 720 720"><defs>
+ <linearGradient id="sky" x2=".5" y2="1"><stop stop-color="#a9ddff"/><stop offset="1" stop-color="#e8e4ff"/></linearGradient>
+ <linearGradient id="warm" x2=".1" y2="1"><stop stop-color="#ffebbf"/><stop offset="1" stop-color="#ffbf9c"/></linearGradient>
+ <linearGradient id="orange" x2=".8" y2="1"><stop stop-color="#ffd58a"/><stop offset=".55" stop-color="#f6a24c"/><stop offset="1" stop-color="#d97142"/></linearGradient>
+ <linearGradient id="skin" x2=".9" y2="1"><stop stop-color="#ffe1ba"/><stop offset="1" stop-color="#edaa85"/></linearGradient>
+ <linearGradient id="purple" x2=".9" y2="1"><stop stop-color="#aa98f8"/><stop offset="1" stop-color="#5e58ca"/></linearGradient>
+ <linearGradient id="green" x2="1" y2="1"><stop stop-color="#c1f3c0"/><stop offset="1" stop-color="#65caa6"/></linearGradient>
+ <linearGradient id="pink" x2=".5" y2="1"><stop stop-color="#ffe0ed"/><stop offset="1" stop-color="#f5a9ce"/></linearGradient>
+ <linearGradient id="blue" x2=".8" y2="1"><stop stop-color="#9cddff"/><stop offset="1" stop-color="#5596ec"/></linearGradient>
+ <linearGradient id="wall" x2=".8" y2="1"><stop stop-color="#e9daff"/><stop offset="1" stop-color="#b0b5f6"/></linearGradient>
+ <linearGradient id="cake" x2="1" y2="1"><stop stop-color="#ffbad8"/><stop offset="1" stop-color="#ee65a6"/></linearGradient>
+ <filter id="shadow" x="-60%" y="-60%" width="220%" height="240%"><feGaussianBlur in="SourceAlpha" stdDeviation="11"/><feOffset dy="12"/><feComponentTransfer><feFuncA type="linear" slope=".25"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="20"/></filter>
+ <radialGradient id="glow"><stop stop-color="#fff" stop-opacity=".62"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+ </defs><rect width="720" height="720" rx="48" fill="url(#pink)"/><circle cx="650" cy="60" r="220" fill="url(#glow)"/><rect width="720" height="720" fill="#f8dcf4"/>
+ <path d="M0 532Q195 502 370 532T720 531V720H0" fill="#b7a1ed"/>
+ <rect x="0" y="560" width="720" height="160" fill="#d6b9fb"/>
+ <ellipse cx="360" cy="601" rx="264" ry="57" fill="#7561ab" opacity=".2"/>
+ <ellipse cx="360" cy="565" rx="252" ry="54" fill="#fff9fe" stroke="#b5a2ce" stroke-width="9"/>
+ <rect x="168" y="352" width="384" height="212" rx="55" fill="url(#cake)" filter="url(#shadow)"/>
+ <rect x="222" y="288" width="275" height="114" rx="40" fill="#ffdbe9"/>
+ <path d="M171 372q35 42 68 0t64 0t64 0t64 0t64 0t57 0v50q-30 19-57-5t-64 7-64-4-64 5-64-10-68 3z" fill="#fff6fc"/>
+ <path d="M187 511q170-52 346 0" stroke="#9e5dc8" stroke-width="8" fill="none"/>
+ <circle cx="221" cy="342" r="15" fill="#ff7f91"/><circle cx="495" cy="342" r="15" fill="#ff7f91"/><g transform="rotate(0 283 263)"><rect x="269" y="225" width="28" height="74" rx="7" fill="#8ac8fb"/><path d="M269 245l28 17 M269 275l28 17" stroke="#fff" opacity=".72" stroke-width="7"/></g><path d="M283 216q-22-33 0-58 20 26 0 58" fill="#ffc16e" stroke="#ff8f68" stroke-width="4"/><g transform="rotate(0 359 253)"><rect x="345" y="215" width="28" height="74" rx="7" fill="#ffd177"/><path d="M345 235l28 17 M345 265l28 17" stroke="#fff" opacity=".72" stroke-width="7"/></g><path d="M359 206q-22-33 0-58 20 26 0 58" fill="#ffc16e" stroke="#ff8f68" stroke-width="4"/><g transform="rotate(0 438 263)"><rect x="424" y="225" width="28" height="74" rx="7" fill="#8be2ba"/><path d="M424 245l28 17 M424 275l28 17" stroke="#fff" opacity=".72" stroke-width="7"/></g><path d="M438 216q-22-33 0-58 20 26 0 58" fill="#ffc16e" stroke="#ff8f68" stroke-width="4"/><text x="353" y="491" text-anchor="middle" font-family="Arial,sans-serif" font-size="44" font-weight="bold" fill="#82439d">HAPPY</text></svg>

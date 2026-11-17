@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kiber Qalxan Junior 🛡️ - Növbə Postu</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body{font-family:"Trebuchet MS","Segoe UI",sans-serif;background:linear-gradient(180deg,#bae6fd,#fbcfe8 60%,#fef08a);min-height:100vh}
+  .float{animation:float 3s ease-in-out infinite}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  .pop{animation:pop .4s cubic-bezier(.2,1.6,.4,1)}
+  @keyframes pop{0%{transform:scale(.5);opacity:0}100%{transform:scale(1);opacity:1}}
+  .rise{animation:rise .5s ease-out}
+  @keyframes rise{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
+  .paper-in{animation:pin .5s ease-out}
+  @keyframes pin{from{transform:translateY(120px) rotate(8deg);opacity:0}to{transform:translateY(0) rotate(-2deg);opacity:1}}
+  .shake{animation:shake .4s}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+  .big-btn{transition:transform .15s,box-shadow .15s;box-shadow:0 6px 0 rgba(0,0,0,.25)}
+  .big-btn:hover:not(:disabled){transform:translateY(-3px)}
+  .big-btn:active:not(:disabled){transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.25)}
+  .big-btn:disabled{opacity:.5;cursor:not-allowed}
+  .desk{background:repeating-linear-gradient(90deg,#d97706 0 46px,#c2680a 46px 48px);border-top:8px solid #92400e}
+  .window{background:linear-gradient(180deg,#e0f2fe,#fef9c3)}
+  .stamp{position:absolute;top:50%;left:50%;border:6px solid;border-radius:14px;padding:4px 14px;font-weight:900;font-size:1.8rem;background:rgba(255,255,255,.55);animation:st .35s cubic-bezier(.2,1.4,.4,1) forwards;pointer-events:none}
+  @keyframes st{0%{transform:translate(-50%,-50%) rotate(-12deg) scale(3);opacity:0}100%{transform:translate(-50%,-50%) rotate(-12deg) scale(1);opacity:.95}}
+  .confetti{position:fixed;top:-20px;font-size:24px;animation:fall linear forwards;pointer-events:none;z-index:70}
+  @keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+  .h{display:none!important}
+</style>
+</head>
+<body class="flex items-center justify-center p-2 sm:p-4">
+<div class="w-full max-w-2xl">
+
+<!-- TUTORIAL -->
+<section id="tutorial" class="bg-white/90 rounded-3xl shadow-xl p-6 pop">
+  <div class="text-center">
+    <div class="text-7xl float">🛡️</div>
+    <h1 class="text-3xl font-extrabold text-indigo-600 mt-2">Kiber Qalxan Junior</h1>
+    <p class="text-lg text-slate-600 mt-1">Sən internetin sərhəd mühafizəçisisən! Hər gün növbəyə çıxırsan 🕘</p>
+  </div>
+  <div class="mt-4 space-y-3">
+    <div class="flex items-center gap-4 bg-sky-100 rounded-2xl p-3"><div class="text-5xl">🕵️</div><div><b class="text-sky-700">Qayda 1</b><p class="text-slate-700 text-lg">Yadlar hiyləgər suallar verə bilər. Qonağın <b>hesab kartına</b> və <b>kağızdakı mesaja</b> bax!</p></div></div>
+    <div class="flex items-center gap-4 bg-pink-100 rounded-2xl p-3"><div class="text-5xl">🤐</div><div><b class="text-pink-700">Qayda 2</b><p class="text-slate-700 text-lg">HEÇ VAXT şəkil, məktəb adı, ünvan və ya parol paylaşma!</p></div></div>
+    <div class="flex items-center gap-4 bg-green-100 rounded-2xl p-3"><div class="text-5xl">🖋️</div><div><b class="text-green-700">Qayda 3</b><p class="text-slate-700 text-lg">Dostcasına mesaja <b class="text-green-600">🟢 TƏHLÜKƏSİZ</b>, təhlükəli istəyə <b class="text-red-600">🔴 BLOKLA</b> möhürünü vur! Hər gün yeni qaydalar əlavə olur (📖 kitabçadan oxu).</p></div></div>
+  </div>
+  <button onclick="startGame()" class="big-btn w-full mt-5 bg-yellow-400 text-yellow-900 text-2xl font-extrabold py-4 rounded-2xl">🚀 Növbəyə başla!</button>
+</section>
+
+<!-- DAY INTRO -->
+<section id="intro" class="h bg-amber-50 border-4 border-amber-300 rounded-3xl shadow-xl p-6 pop">
+  <div class="text-center text-amber-700 font-bold tracking-widest">📰 KİBER QƏZET</div>
+  <h2 id="introTitle" class="text-4xl font-extrabold text-center text-indigo-600 mt-1"></h2>
+  <p class="text-center text-slate-600 text-lg">Bu günün qaydaları:</p>
+  <ul id="introRules" class="mt-3 space-y-2"></ul>
+  <button onclick="beginDay()" class="big-btn w-full mt-5 bg-green-400 text-white text-2xl font-extrabold py-4 rounded-2xl">🔔 Postu aç!</button>
+</section>
+
+<!-- GAME -->
+<section id="game" class="h">
+  <div class="bg-indigo-600 text-white rounded-t-3xl px-4 py-2 flex items-center justify-between font-bold text-lg">
+    <span id="dayTxt">Gün 1/3</span>
+    <span>🕘 <span id="clock">09:00</span></span>
+    <span>⭐ <span id="score">0</span></span>
+    <span id="shields" class="tracking-widest">🛡️🛡️🛡️</span>
+  </div>
+  <!-- booth window -->
+  <div class="window relative h-44 flex items-end justify-center overflow-hidden">
+    <div class="absolute top-2 left-3 text-4xl">☁️</div><div class="absolute top-4 right-6 text-4xl">☁️</div>
+    <div class="absolute top-0 left-0 w-8 h-full bg-pink-300/70"></div><div class="absolute top-0 right-0 w-8 h-full bg-pink-300/70"></div>
+    <div id="visitor" class="text-center rise">
+      <div id="avatar" class="text-8xl leading-none">🙂</div>
+    </div>
+  </div>
+  <!-- desk -->
+  <div class="desk p-3 rounded-b-3xl shadow-xl">
+    <div class="grid grid-cols-5 gap-3 items-start">
+      <div class="col-span-2 bg-sky-50 rounded-xl p-3 border-4 border-sky-300 shadow-md" style="transform:rotate(1.5deg)">
+        <div class="text-xs font-bold text-sky-600">🪪 HESAB KARTI</div>
+        <div id="cName" class="text-xl font-extrabold text-slate-700 break-all"></div>
+        <div class="text-sm text-slate-600 mt-1">Hesab yaşı: <b id="cAge"></b></div>
+        <div class="text-sm text-slate-600">Dostum?: <b id="cFriend"></b></div>
+        <div id="cWarn" class="text-sm font-bold text-red-500 mt-1"></div>
+      </div>
+      <div id="paper" class="relative col-span-3 bg-yellow-50 rounded-lg p-4 shadow-lg border border-yellow-200 min-h-[130px] paper-in">
+        <div class="text-xs font-bold text-amber-600">✉️ MESAJ KAĞIZI</div>
+        <p id="msg" class="text-xl font-bold text-slate-700 leading-snug mt-1"></p>
+      </div>
+    </div>
+    <div class="grid grid-cols-5 gap-3 mt-4">
+      <button onclick="toggleBook(true)" class="big-btn bg-indigo-200 text-indigo-800 font-extrabold rounded-2xl py-3 text-lg leading-tight">📖<br>Qayda kitabçası</button>
+      <button id="safeBtn" onclick="answer(true)" class="big-btn col-span-2 bg-green-400 text-white text-xl font-extrabold rounded-2xl py-3">🟢<br>TƏHLÜKƏSİZ</button>
+      <button id="blockBtn" onclick="answer(false)" class="big-btn col-span-2 bg-red-400 text-white text-xl font-extrabold rounded-2xl py-3">🔴<br>BLOKLA</button>
+    </div>
+  </div>
+</section>
+
+<!-- DAY REPORT -->
+<section id="report" class="h bg-white rounded-3xl shadow-xl p-6 text-center pop">
+  <div class="text-6xl float">📋</div>
+  <h2 class="text-3xl font-extrabold text-indigo-600 mt-2">Günün hesabatı</h2>
+  <div class="mt-4 bg-amber-50 border-2 border-dashed border-amber-300 rounded-2xl p-4 text-xl text-slate-700 space-y-1 text-left">
+    <div class="flex justify-between"><span>✅ Düzgün qərar</span><b id="rOk"></b></div>
+    <div class="flex justify-between"><span>⭐ Bu günün xalı</span><b id="rPts"></b></div>
+    <div class="flex justify-between"><span>🪙 Qazanılan qızıl</span><b id="rCoin"></b></div>
+    <div class="flex justify-between"><span>🛡️ Qalxan gücü</span><b id="rSh"></b></div>
+  </div>
+  <p id="rMsg" class="text-lg text-slate-600 mt-3"></p>
+  <button id="rBtn" onclick="nextDay()" class="big-btn w-full mt-4 bg-yellow-400 text-yellow-900 text-2xl font-extrabold py-4 rounded-2xl"></button>
+</section>
+
+<!-- END -->
+<section id="end" class="h bg-white/90 rounded-3xl shadow-xl p-8 text-center pop">
+  <div id="endEmoji" class="text-8xl float">🏆</div>
+  <h2 id="endTitle" class="text-3xl font-extrabold text-indigo-600 mt-3"></h2>
+  <div class="text-6xl font-extrabold text-amber-500 my-2">⭐ <span id="finalScore"></span><span class="text-3xl text-slate-400">/90</span></div>
+  <p class="text-xl text-slate-600">🪙 Toplam qızıl: <b id="finalCoin"></b></p>
+  <p id="endText" class="text-xl text-slate-600 mt-1"></p>
+  <div class="mt-4 bg-sky-100 rounded-2xl p-4 text-lg text-slate-700">💡 Unutma: şəkil, məktəb, ünvan və parolu heç vaxt yadlara vermə. Şübhə etsən, bloklayıb böyüklərə de!</div>
+  <button onclick="startGame()" class="big-btn w-full mt-5 bg-yellow-400 text-yellow-900 text-2xl font-extrabold py-4 rounded-2xl">🔄 Yenidən oyna</button>
+</section>
+
+<!-- FEEDBACK POPUP -->
+<div id="popup" class="h fixed inset-0 bg-indigo-900/50 flex items-center justify-center p-4 z-50">
+  <div id="popBox" class="bg-white rounded-3xl p-6 max-w-md w-full text-center shadow-2xl pop">
+    <div id="popEmoji" class="text-7xl float">🦸</div>
+    <h2 id="popTitle" class="text-3xl font-extrabold mt-2"></h2>
+    <p id="popText" class="text-xl text-slate-600 mt-2 leading-snug"></p>
+    <div id="badge" class="mt-3 text-lg font-bold text-amber-600"></div>
+    <button onclick="nextRound()" id="nextBtn" class="big-btn mt-5 w-full bg-indigo-500 text-white text-2xl font-extrabold py-3 rounded-2xl">Növbəti ➡️</button>
+  </div>
+</div>
+
+<!-- RULEBOOK -->
+<div id="book" class="h fixed inset-0 bg-indigo-900/50 flex items-center justify-center p-4 z-50">
+  <div class="bg-amber-50 border-8 border-indigo-400 rounded-3xl p-5 max-w-md w-full shadow-2xl pop">
+    <h3 class="text-2xl font-extrabold text-indigo-600 text-center">📖 Qayda kitabçası</h3>
+    <ul id="bookRules" class="mt-3 space-y-2"></ul>
+    <button onclick="toggleBook(false)" class="big-btn mt-4 w-full bg-indigo-500 text-white text-xl font-extrabold py-3 rounded-2xl">Bağla ✖</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+const RULES = [
+  {t:"📸 Şəkil istəyirsə → 🔴 BLOKLA", d:0},
+  {t:"🏫 Məktəb, ünvan və ya görüş soruşursa → 🔴 BLOKLA", d:0},
+  {t:"🎮 Yalnız oyun söhbəti və xoş sözlər → 🟢 TƏHLÜKƏSİZ", d:0},
+  {t:"🎁 Pulsuz hədiyyə / şübhəli link → 🔴 BLOKLA", d:1},
+  {t:"🔑 Parol və ya kod istəyirsə → 🔴 BLOKLA", d:1},
+  {t:"🆕 Yeni hesab (1 günlük) + şəxsi sual → 🔴 BLOKLA", d:2}
+];
+const DAYS = [
+ [
+  {av:"😎",n:"GamerAli",age:"2 il",fr:"Bəli ✅",msg:"GG! Əla matç idi, yenidən oynayaq? 🎮",safe:true,ok:"Bu, sadə oyun söhbətidir. Heç bir şəxsi məlumat istəmir.",bad:"Eybi yox! Bu mesaj dostcasına idi. Amma həmişə diqqətli olmaq yaxşıdır."},
+  {av:"🧑‍🎤",n:"Bestie_2024",age:"3 gün",fr:"Xeyr ❌",warn:"⚠️ Yeni tanış",msg:"Salam dostum! Mənə üzünün real şəklini göndər! 📸",safe:false,ok:"Yadlara heç vaxt öz şəklini göndərmək olmaz.",bad:"Eybi yox, amma unutma: heç vaxt yadlara şəklini atma! Şəkil səndən sui-istifadə üçün işlənə bilər."},
+  {av:"🧢",n:"ProPlayer77",age:"5 gün",fr:"Xeyr ❌",warn:"⚠️ Yeni tanış",msg:"Hansı məktəbdə oxuyursan? Gəl görüşək. 🏫",safe:false,ok:"Məktəb adı və görüş təklifi çox təhlükəlidir.",bad:"Eybi yox, amma yadlara məktəbini deməməlisən! Onlar səni tapıb zərər verə bilər."}
+ ],
+ [
+  {av:"🤠",n:"SwordMaster",age:"1 il",fr:"Bəli ✅",msg:"Sənin bu oyunda yeni qılınc skinin var? ⚔️",safe:true,ok:"Bu sual yalnız oyunla bağlıdır. Təhlükəsizdir.",bad:"Eybi yox! Oyun haqqında sual normaldır. Şəxsi məlumat istəyəndə bloklayarsan."},
+  {av:"🤑",n:"FreeGifts_XD",age:"2 gün",fr:"Xeyr ❌",warn:"⚠️ Yeni tanış",msg:"Bu linkə bas, 10 000 pulsuz Robux/V-Bucks qazan! 🎁",safe:false,ok:"Belə yalançı linklər hesabını oğurlaya bilər.",bad:"Eybi yox, amma unutma: pulsuz hədiyyə vəd edən linklərə heç vaxt basma! Parolunu oğurlaya bilərlər."},
+  {av:"🦊",n:"HelperFox",age:"4 gün",fr:"Xeyr ❌",warn:"⚠️ Yeni tanış",msg:"Hesabına level atım! Parolunu mənə de. 🔑",safe:false,ok:"Parol yalnız səninkidir. Heç kimə verilmir!",bad:"Eybi yox, amma unutma: parolu heç kimə demə, hətta kömək edəcəyini desələr də!"}
+ ],
+ [
+  {av:"👩‍🏫",n:"MiniMia",age:"3 il",fr:"Bəli ✅",msg:"Bu gün ev tapşırığında uğurlar! 📚",safe:true,ok:"Mehriban və təhlükəsiz mesajdır.",bad:"Eybi yox! Bu, xoş arzudur, heç nə istəmir. Amma diqqətli olmağın yaxşıdır."},
+  {av:"🐺",n:"NewUser_999",age:"1 gün",fr:"Xeyr ❌",warn:"⚠️ Çox yeni hesab!",msg:"Salam! Sən harada yaşayırsan? Küçənin adı nədir? 🏠",safe:false,ok:"Ünvan heç vaxt yadlara deyilmir, xüsusən yeni hesablara!",bad:"Eybi yox, amma unutma: ünvanını heç vaxt yadlara demə! Yeni hesablara ehtiyatlı ol."},
+  {av:"🐼",n:"TeamPanda",age:"1 il",fr:"Bəli ✅",msg:"Bu səviyyədə hansı qapını seçim? Kömək et! 🚪",safe:true,ok:"Bu, oyunla bağlı komanda sualıdır. Təhlükəsizdir.",bad:"Eybi yox! Bu, sadəcə oyun köməyidir. Şəxsi məlumat istənmir."}
+ ]
+];
+const BADGES=["🏅 Diqqətli Göz","🥇 Parol Mühafizəçisi","🛡️ Qalxan Ustası","🦸 Süper Qoruyucu","🌟 Gizlilik Ulduzu","👑 Kiber Çempion","🔍 Şübhə Ovçusu","🚀 Kiber Pilot","💎 Gizlilik Almazı"];
+const $=id=>document.getElementById(id);
+let day,i,score,coins,mistakes,dayOk,dayPts,total;
+
+function show(id){["tutorial","intro","game","report","end"].forEach(s=>$(s).classList.add("h"));$(id).classList.remove("h");}
+function rulesHTML(upTo,markNew){return RULES.filter(r=>r.d<=upTo).map(r=>`<li class="rounded-xl p-3 text-lg font-bold ${r.d===upTo&&markNew?'bg-yellow-200 border-2 border-yellow-400':'bg-white border border-slate-200'} text-slate-700">${r.d===upTo&&markNew?'🆕 ':''}${r.t}</li>`).join("");}
+
+function startGame(){day=0;score=0;coins=0;mistakes=0;total=0;showIntro();}
+function showIntro(){
+  $("introTitle").textContent=`Gün ${day+1}`;
+  $("introRules").innerHTML=rulesHTML(day,true);
+  show("intro");
+}
+function beginDay(){i=0;dayOk=0;dayPts=0;show("game");loadRound();}
+function loadRound(){
+  const s=DAYS[day][i];
+  $("dayTxt").textContent=`Gün ${day+1}/3 • ${i+1}/3`;
+  $("clock").textContent=`${9+day*3}:${String(i*20).padStart(2,"0")}`;
+  $("score").textContent=score;
+  $("shields").textContent="🛡️".repeat(Math.max(0,3-mistakes))+"💔".repeat(Math.min(3,mistakes));
+  $("avatar").textContent=s.av;
+  $("cName").textContent=s.n;$("cAge").textContent=s.age;$("cFriend").textContent=s.fr;$("cWarn").textContent=s.warn||"";
+  $("msg").textContent=s.msg;
+  const v=$("visitor"),p=$("paper");
+  v.classList.remove("rise");p.classList.remove("paper-in");void v.offsetWidth;
+  v.classList.add("rise");p.classList.add("paper-in");
+  p.querySelectorAll(".stamp").forEach(e=>e.remove());
+  $("safeBtn").disabled=false;$("blockBtn").disabled=false;
+}
+function answer(choseSafe){
+  const s=DAYS[day][i];
+  $("safeBtn").disabled=true;$("blockBtn").disabled=true;
+  const st=document.createElement("div");
+  st.className="stamp";
+  st.style.color=choseSafe?"#16a34a":"#dc2626";
+  st.textContent=choseSafe?"TƏHLÜKƏSİZ":"BLOKLA";
+  $("paper").appendChild(st);
+  const right=choseSafe===s.safe;
+  setTimeout(()=>{
+    const box=$("popBox");box.classList.remove("shake");
+    if(right){
+      score+=10;dayPts+=10;dayOk++;total++;coins+=5;
+      $("popEmoji").textContent="🦸";
+      $("popTitle").textContent="Əla! Doğru qərar! 🎉";
+      $("popTitle").className="text-3xl font-extrabold mt-2 text-green-600";
+      $("popText").textContent=s.ok;
+      $("badge").textContent="+10 xal • +5 🪙 • "+BADGES[day*3+i];
+      confetti(14);
+    }else{
+      mistakes++;
+      $("popEmoji").textContent="🤗";
+      $("popTitle").textContent="Az qala! 💪";
+      $("popTitle").className="text-3xl font-extrabold mt-2 text-orange-500";
+      $("popText").textContent=s.bad;
+      $("badge").textContent="Qalxan zədələndi 💔 Növbəti dəfə alınacaq!";
+      void box.offsetWidth;box.classList.add("shake");
+    }
+    $("score").textContent=score;
+    $("shields").textContent="🛡️".repeat(Math.max(0,3-mistakes))+"💔".repeat(Math.min(3,mistakes));
+    $("popup").classList.remove("h");
+  },800);
+}
+function nextRound(){
+  $("popup").classList.add("h");
+  i++;
+  if(i>=3)dayReport();else loadRound();
+}
+function dayReport(){
+  $("rOk").textContent=`${dayOk}/3`;
+  $("rPts").textContent=dayPts;
+  $("rCoin").textContent=dayOk*5;
+  $("rSh").textContent="🛡️".repeat(Math.max(0,3-mistakes))+"💔".repeat(Math.min(3,mistakes));
+  $("rMsg").textContent=dayOk===3?"Mükəmməl növbə! Rəis səninlə fəxr edir! 🌟":"Yaxşı iş! Sabah daha diqqətli olacaqsan 💪";
+  $("rBtn").textContent=day<2?`🌙 Gün ${day+2}-ə keç`:"🏆 Final nəticəsi";
+  show("report");
+  if(dayOk===3)confetti(18);
+}
+function nextDay(){
+  if(day<2){day++;showIntro();}else endGame();
+}
+function endGame(){
+  show("end");
+  $("finalScore").textContent=score;$("finalCoin").textContent=coins;
+  let t,e,d;
+  if(total>=9){t="Sən artıq Kiber Qəhrəmansan! 🛡️";e="🏆";d="Mükəmməl! Bütün qərarlar düzgün idi!";}
+  else if(total>=6){t="Sən Kiber Mühafizəçisən! 🦸";e="🥇";d="Çox yaxşı! Bir az da məşq və sən çempion olacaqsan!";}
+  else{t="Sən Kiber Şagirdsən! 🌱";e="🌟";d="Yaxşı start! Yenidən oyna və qaydaları yadda saxla.";}
+  $("endTitle").textContent=t;$("endEmoji").textContent=e;$("endText").textContent=d;
+  if(total>=6)confetti(30);
+}
+function toggleBook(open){
+  if(open)$("bookRules").innerHTML=rulesHTML(day,false);
+  $("book").classList.toggle("h",!open);
+}
+function confetti(n){
+  const em=["🎉","⭐","✨","🎈","💙","💚"];
+  for(let k=0;k<n;k++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.textContent=em[Math.floor(Math.random()*em.length)];
+    c.style.left=Math.random()*100+"vw";
+    c.style.animationDuration=(2+Math.random()*2)+"s";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),4200);
+  }
+}
+</script>
+</body>
+</html>
